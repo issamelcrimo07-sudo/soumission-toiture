@@ -1,0 +1,11 @@
+{
+  "name": "soumissions-toiture-pro",
+  "version": "2.0.0",
+  "description": "Application de génération de soumissions de toiture avec mesure satellite",
+  "scripts": {
+    "build": "node build.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

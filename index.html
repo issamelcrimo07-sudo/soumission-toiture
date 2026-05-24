@@ -7,622 +7,233 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
   <style>
-/* ═══════════════════════════════════════════════════════════════
-   SOUMISSIONS TOITURE PRO — Styles
-   Police : Sora (display) + DM Sans (body)
-═══════════════════════════════════════════════════════════════ */
-
 @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap');
 
-/* ─── Variables ──────────────────────────────────────────────── */
 :root {
   --bg: #f4f5f7;
   --surface: #ffffff;
   --surface-2: #f9fafb;
   --border: #e2e5ea;
   --border-strong: #c8cdd6;
-
   --text-primary: #111827;
   --text-secondary: #4b5563;
   --text-muted: #9ca3af;
-
-  --accent: #1a3d6e;       /* bleu ardoise foncé */
-  --accent-2: #2563eb;     /* bleu vif */
+  --accent: #1a3d6e;
+  --accent-2: #2563eb;
   --accent-light: #eff6ff;
   --accent-hover: #1e40af;
-
   --danger: #dc2626;
   --danger-light: #fef2f2;
   --success: #16a34a;
   --success-light: #f0fdf4;
   --warning: #d97706;
-
+  --warning-light: #fffbeb;
   --shadow-sm: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
   --shadow-md: 0 4px 16px rgba(0,0,0,.08), 0 2px 6px rgba(0,0,0,.04);
   --shadow-lg: 0 12px 40px rgba(0,0,0,.12);
-
   --radius: 10px;
   --radius-sm: 6px;
   --radius-lg: 16px;
-
   --font-display: 'Sora', sans-serif;
   --font-body: 'DM Sans', sans-serif;
-
   --header-h: 72px;
   --status-h: 36px;
 }
 
-/* ─── Reset & Base ───────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 html { scroll-behavior: smooth; }
+body { font-family: var(--font-body); font-size: 14.5px; color: var(--text-primary); background: var(--bg); min-height: 100vh; -webkit-font-smoothing: antialiased; }
 
-body {
-  font-family: var(--font-body);
-  font-size: 14.5px;
-  color: var(--text-primary);
-  background: var(--bg);
-  min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
-}
-
-/* ─── Header ─────────────────────────────────────────────────── */
-.app-header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  background: var(--accent);
-  box-shadow: 0 2px 20px rgba(0,0,0,.25);
-  height: var(--header-h);
-}
-
-.header-inner {
-  max-width: 1100px;
-  margin: 0 auto;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 0 1.5rem;
-}
-
-.header-brand {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.logo-placeholder {
-  width: 44px;
-  height: 44px;
-  background: rgba(255,255,255,.12);
-  border: 2px dashed rgba(255,255,255,.35);
-  border-radius: var(--radius-sm);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: help;
-  transition: border-color .2s;
-  font-size: 20px;
-}
+/* ─── Header ─── */
+.app-header { position: sticky; top: 0; z-index: 100; background: var(--accent); box-shadow: 0 2px 20px rgba(0,0,0,.25); height: var(--header-h); }
+.header-inner { max-width: 1100px; margin: 0 auto; height: 100%; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0 1.5rem; }
+.header-brand { display: flex; align-items: center; gap: 1rem; }
+.logo-placeholder { width: 44px; height: 44px; background: rgba(255,255,255,.12); border: 2px dashed rgba(255,255,255,.35); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; cursor: help; transition: border-color .2s; font-size: 20px; }
 .logo-placeholder:hover { border-color: rgba(255,255,255,.7); }
+.brand-text h1 { font-family: var(--font-display); font-size: 1.15rem; font-weight: 800; color: #fff; letter-spacing: -.3px; }
+.brand-text p { font-size: .75rem; color: rgba(255,255,255,.6); margin-top: 1px; }
+.header-actions { display: flex; align-items: center; gap: .75rem; flex-shrink: 0; }
+.quote-number-badge { font-family: var(--font-display); font-weight: 700; font-size: .85rem; color: #fff; background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.25); padding: .35rem .85rem; border-radius: 20px; letter-spacing: .5px; }
 
-.brand-text h1 {
-  font-family: var(--font-display);
-  font-size: 1.15rem;
-  font-weight: 800;
-  color: #fff;
-  letter-spacing: -.3px;
-}
-.brand-text p {
-  font-size: .75rem;
-  color: rgba(255,255,255,.6);
-  margin-top: 1px;
-}
-
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: .75rem;
-  flex-shrink: 0;
-}
-
-.quote-number-badge {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: .85rem;
-  color: #fff;
-  background: rgba(255,255,255,.15);
-  border: 1px solid rgba(255,255,255,.25);
-  padding: .35rem .85rem;
-  border-radius: 20px;
-  letter-spacing: .5px;
-}
-
-/* ─── Status Bar ─────────────────────────────────────────────── */
-.status-bar {
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  height: var(--status-h);
-  display: flex;
-  align-items: center;
-  padding: 0 1.5rem;
-}
-
-.status-indicator {
-  display: flex;
-  align-items: center;
-  gap: .5rem;
-  font-size: .78rem;
-  color: var(--text-muted);
-}
-
-.status-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--text-muted);
-  transition: background .3s;
-}
-
+/* ─── Status Bar ─── */
+.status-bar { background: var(--surface); border-bottom: 1px solid var(--border); height: var(--status-h); display: flex; align-items: center; padding: 0 1.5rem; }
+.status-indicator { display: flex; align-items: center; gap: .5rem; font-size: .78rem; color: var(--text-muted); }
+.status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--text-muted); transition: background .3s; }
 .status-indicator.saved .status-dot { background: var(--success); }
 .status-indicator.saved #statusText { color: var(--success); }
 .status-indicator.unsaved .status-dot { background: var(--warning); animation: pulse 1.5s infinite; }
 .status-indicator.unsaved #statusText { color: var(--warning); }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .4; } }
 
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: .4; }
-}
+/* ─── Main ─── */
+.app-main { max-width: 1100px; margin: 0 auto; padding: 1.75rem 1.5rem 4rem; display: flex; flex-direction: column; gap: 1.25rem; }
 
-/* ─── Main Layout ────────────────────────────────────────────── */
-.app-main {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 1.75rem 1.5rem 4rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-/* ─── Cards ──────────────────────────────────────────────────── */
-.card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-  overflow: hidden;
-  animation: cardIn .3s ease both;
-}
-
-@keyframes cardIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-.card-header {
-  display: flex;
-  align-items: center;
-  gap: .75rem;
-  padding: 1.1rem 1.5rem;
-  background: var(--surface-2);
-  border-bottom: 1px solid var(--border);
-}
-
+/* ─── Cards ─── */
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); overflow: hidden; animation: cardIn .3s ease both; }
+@keyframes cardIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.card-header { display: flex; align-items: center; gap: .75rem; padding: 1.1rem 1.5rem; background: var(--surface-2); border-bottom: 1px solid var(--border); }
 .card-icon { font-size: 1.1rem; }
+.card-header h2 { font-family: var(--font-display); font-size: .95rem; font-weight: 700; color: var(--accent); flex: 1; }
+.card-badge { font-size: .72rem; font-weight: 600; padding: .2rem .6rem; border-radius: 20px; background: var(--success-light); color: var(--success); }
+.card > .form-grid, .card > .work-type-tabs, .card > .table-wrapper, .card > .exclusions-grid, .card > .totals-table, .card > textarea, .card > .action-buttons { padding: 1.25rem 1.5rem; }
 
-.card-header h2 {
-  font-family: var(--font-display);
-  font-size: .95rem;
-  font-weight: 700;
-  color: var(--accent);
-  flex: 1;
-}
-
-.card-badge {
-  font-size: .72rem;
-  font-weight: 600;
-  padding: .2rem .6rem;
-  border-radius: 20px;
-  background: var(--success-light);
-  color: var(--success);
-}
-
-.card > .form-grid,
-.card > .work-type-tabs,
-.card > .table-wrapper,
-.card > .exclusions-grid,
-.card > .totals-table,
-.card > textarea,
-.card > .action-buttons {
-  padding: 1.25rem 1.5rem;
-}
-
-/* ─── Form Grid ──────────────────────────────────────────────── */
-.form-grid {
-  display: grid;
-  gap: 1rem;
-}
+/* ─── Form Grid ─── */
+.form-grid { display: grid; gap: 1rem; }
 .four-col  { grid-template-columns: repeat(4, 1fr); }
 .three-col { grid-template-columns: repeat(3, 1fr); }
 .two-col   { grid-template-columns: repeat(2, 1fr); }
-
 .field { display: flex; flex-direction: column; gap: .4rem; }
 .field-wide { grid-column: span 2; }
-
-label {
-  font-size: .78rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: .5px;
+label { font-size: .78rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: .5px; }
+input[type="text"], input[type="number"], input[type="tel"], input[type="email"], input[type="date"], select, textarea {
+  font-family: var(--font-body); font-size: .9rem; color: var(--text-primary); background: var(--surface);
+  border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: .55rem .8rem; width: 100%;
+  transition: border-color .15s, box-shadow .15s; outline: none;
 }
-
-input[type="text"],
-input[type="number"],
-input[type="tel"],
-input[type="email"],
-input[type="date"],
-select,
-textarea {
-  font-family: var(--font-body);
-  font-size: .9rem;
-  color: var(--text-primary);
-  background: var(--surface);
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: .55rem .8rem;
-  width: 100%;
-  transition: border-color .15s, box-shadow .15s;
-  outline: none;
-}
-
-input:focus, select:focus, textarea:focus {
-  border-color: var(--accent-2);
-  box-shadow: 0 0 0 3px rgba(37,99,235,.12);
-}
-
+input:focus, select:focus, textarea:focus { border-color: var(--accent-2); box-shadow: 0 0 0 3px rgba(37,99,235,.12); }
 input[readonly] { background: var(--surface-2); cursor: default; }
-
 textarea { resize: vertical; min-height: 90px; }
-
 select { cursor: pointer; }
 
-/* ─── Work Type Tabs ─────────────────────────────────────────── */
-.work-type-tabs {
-  display: flex;
-  gap: .5rem;
-  flex-wrap: wrap;
-  padding: 1rem 1.5rem 0;
-}
-
-.tab-btn {
-  font-family: var(--font-display);
-  font-size: .82rem;
-  font-weight: 600;
-  padding: .55rem 1.1rem;
-  border: 2px solid var(--border);
-  border-radius: 8px;
-  background: var(--surface);
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: all .2s;
-}
+/* ─── Work Type Tabs ─── */
+.work-type-tabs { display: flex; gap: .5rem; flex-wrap: wrap; padding: 1rem 1.5rem 0; }
+.tab-btn { font-family: var(--font-display); font-size: .82rem; font-weight: 600; padding: .55rem 1.1rem; border: 2px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--text-secondary); cursor: pointer; transition: all .2s; }
 .tab-btn:hover { border-color: var(--accent-2); color: var(--accent-2); }
-.tab-btn.active {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #fff;
-  box-shadow: 0 2px 8px rgba(26,61,110,.3);
-}
+.tab-btn.active { background: var(--accent); border-color: var(--accent); color: #fff; box-shadow: 0 2px 8px rgba(26,61,110,.3); }
 
-/* ─── Items Table ────────────────────────────────────────────── */
+/* ─── Satellite Map ─── */
+.map-section { padding: 1.25rem 1.5rem; }
+.map-toolbar { display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; margin-bottom: .75rem; }
+.map-toolbar-label { font-size: .78rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: .5px; }
+.map-container { position: relative; width: 100%; height: 380px; border-radius: var(--radius); overflow: hidden; border: 1.5px solid var(--border); background: #1a2535; }
+#satelliteMap { width: 100%; height: 100%; }
+.map-placeholder { width: 100%; height: 380px; border-radius: var(--radius); border: 2px dashed var(--border); background: var(--surface-2); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .75rem; color: var(--text-muted); font-size: .9rem; }
+.map-placeholder .map-ph-icon { font-size: 2.5rem; }
+.map-placeholder .map-ph-title { font-family: var(--font-display); font-weight: 700; font-size: 1rem; color: var(--text-secondary); }
+.map-placeholder .map-ph-sub { font-size: .82rem; text-align: center; max-width: 320px; line-height: 1.5; }
+.map-result-banner { display: flex; align-items: center; gap: 1rem; margin-top: .75rem; padding: .75rem 1rem; background: var(--success-light); border: 1.5px solid #bbf7d0; border-radius: var(--radius-sm); flex-wrap: wrap; }
+.map-result-banner.hidden { display: none; }
+.map-result-area { font-family: var(--font-display); font-weight: 800; font-size: 1.1rem; color: var(--success); }
+.map-result-label { font-size: .85rem; color: #166534; flex: 1; }
+.map-tip { font-size: .78rem; color: var(--text-muted); margin-top: .5rem; line-height: 1.5; padding: .5rem .75rem; background: var(--surface-2); border-radius: var(--radius-sm); border-left: 3px solid var(--accent-2); }
+.btn-map-action { font-family: var(--font-display); font-size: .78rem; font-weight: 700; padding: .4rem .9rem; border-radius: var(--radius-sm); cursor: pointer; display: inline-flex; align-items: center; gap: .35rem; transition: all .15s; border: 1.5px solid transparent; white-space: nowrap; }
+.btn-map-draw { background: var(--accent-2); color: #fff; border-color: var(--accent-2); }
+.btn-map-draw:hover { background: var(--accent-hover); }
+.btn-map-draw.active { background: var(--warning); border-color: var(--warning); }
+.btn-map-clear { background: transparent; color: var(--danger); border-color: var(--danger); }
+.btn-map-clear:hover { background: var(--danger-light); }
+.btn-map-apply { background: var(--success); color: #fff; border-color: var(--success); }
+.btn-map-apply:hover { background: #15803d; }
+.map-no-key { padding: 1.25rem 1.5rem; }
+.map-no-key-box { background: var(--warning-light); border: 1.5px solid #fde68a; border-radius: var(--radius); padding: 1rem 1.25rem; }
+.map-no-key-box h3 { font-family: var(--font-display); font-size: .9rem; font-weight: 700; color: #92400e; margin-bottom: .4rem; }
+.map-no-key-box p { font-size: .82rem; color: #78350f; line-height: 1.6; }
+.map-no-key-box code { background: #fef3c7; padding: .1rem .35rem; border-radius: 4px; font-size: .8rem; }
+
+/* ─── Pitch + Area row ─── */
+.pitch-area-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 1rem; }
+.pitch-factor-badge { display: inline-flex; align-items: center; gap: .4rem; margin-top: .4rem; font-size: .78rem; color: var(--accent-2); font-weight: 600; }
+.superficie-adjusted { font-size: .75rem; color: var(--text-muted); margin-top: .3rem; }
+
+/* ─── Auto-calc banner ─── */
+.autocalc-banner { display: flex; align-items: center; gap: .75rem; padding: .65rem 1rem; background: var(--accent-light); border-top: 1px solid #bfdbfe; flex-wrap: wrap; }
+.autocalc-banner.hidden { display: none; }
+.autocalc-banner span { font-size: .82rem; color: var(--accent-2); flex: 1; }
+.autocalc-changed { background: var(--warning-light); border-top-color: #fde68a; }
+.autocalc-changed span { color: var(--warning); }
+
+/* ─── Tables ─── */
 .table-wrapper { overflow-x: auto; }
-
-.items-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: .88rem;
-}
-
-.items-table thead th {
-  font-family: var(--font-display);
-  font-size: .72rem;
-  font-weight: 700;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: .6px;
-  background: var(--surface-2);
-  padding: .65rem .75rem;
-  border-bottom: 2px solid var(--border);
-  text-align: left;
-  white-space: nowrap;
-}
-
-.items-table td {
-  padding: .45rem .6rem;
-  border-bottom: 1px solid var(--border);
-  vertical-align: middle;
-}
-
+.items-table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+.items-table thead th { font-family: var(--font-display); font-size: .72rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: .6px; background: var(--surface-2); padding: .65rem .75rem; border-bottom: 2px solid var(--border); text-align: left; white-space: nowrap; }
+.items-table td { padding: .45rem .6rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
 .items-table tbody tr:hover td { background: var(--accent-light); }
-
 .col-desc  { min-width: 220px; }
 .col-qty   { width: 90px; }
 .col-unit  { width: 110px; }
 .col-price { width: 120px; }
 .col-total { width: 120px; font-weight: 600; color: var(--accent); text-align: right; }
 .col-action { width: 40px; text-align: center; }
-
-.items-table input, .items-table select {
-  padding: .35rem .5rem;
-  font-size: .85rem;
-}
-
-.items-table .col-total td { text-align: right; }
-
-.subtotal-row td {
-  background: var(--surface-2);
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: .88rem;
-  color: var(--accent);
-  padding: .75rem .75rem;
-  border-top: 2px solid var(--border);
-}
+.items-table input, .items-table select { padding: .35rem .5rem; font-size: .85rem; }
+.subtotal-row td { background: var(--surface-2); font-family: var(--font-display); font-weight: 700; font-size: .88rem; color: var(--accent); padding: .75rem .75rem; border-top: 2px solid var(--border); }
 .subtotal-row td:first-child { color: var(--text-secondary); font-weight: 600; }
+.row-auto td { background: #f0fdf4 !important; }
+.row-auto td:first-child::after { content: ' ✦'; color: var(--success); font-size: .7rem; }
 
-/* ─── Buttons ────────────────────────────────────────────────── */
-.btn {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: .82rem;
-  padding: .55rem 1.1rem;
-  border: none;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: .4rem;
-  transition: all .15s;
-  white-space: nowrap;
-}
-
-.btn-primary {
-  background: var(--accent-2);
-  color: #fff;
-}
+/* ─── Buttons ─── */
+.btn { font-family: var(--font-display); font-weight: 600; font-size: .82rem; padding: .55rem 1.1rem; border: none; border-radius: var(--radius-sm); cursor: pointer; display: inline-flex; align-items: center; gap: .4rem; transition: all .15s; white-space: nowrap; }
+.btn-primary { background: var(--accent-2); color: #fff; }
 .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(37,99,235,.3); }
-
-.btn-secondary {
-  background: rgba(255,255,255,.15);
-  color: #fff;
-  border: 1.5px solid rgba(255,255,255,.3);
-}
+.btn-secondary { background: rgba(255,255,255,.15); color: #fff; border: 1.5px solid rgba(255,255,255,.3); }
 .btn-secondary:hover { background: rgba(255,255,255,.25); }
-
-.btn-outline {
-  background: transparent;
-  color: var(--accent-2);
-  border: 1.5px solid var(--accent-2);
-}
+.btn-outline { background: transparent; color: var(--accent-2); border: 1.5px solid var(--accent-2); }
 .btn-outline:hover { background: var(--accent-light); }
-
-.btn-danger {
-  background: var(--danger);
-  color: #fff;
-}
+.btn-warning { background: var(--warning); color: #fff; }
+.btn-warning:hover { background: #b45309; }
+.btn-danger { background: var(--danger); color: #fff; }
 .btn-danger:hover { background: #b91c1c; }
-
-.btn-danger-outline {
-  background: transparent;
-  color: rgba(255,255,255,.75);
-  border: 1.5px solid rgba(255,255,255,.3);
-}
+.btn-danger-outline { background: transparent; color: rgba(255,255,255,.75); border: 1.5px solid rgba(255,255,255,.3); }
 .btn-danger-outline:hover { color: #fff; border-color: rgba(255,255,255,.7); background: rgba(220,38,38,.2); }
-
-.btn-sm {
-  padding: .35rem .8rem;
-  font-size: .77rem;
-}
-
-.btn-large {
-  padding: .85rem 2rem;
-  font-size: .95rem;
-}
-
-.btn-icon-del {
-  width: 28px;
-  height: 28px;
-  padding: 0;
-  background: transparent;
-  border: 1.5px solid var(--border);
-  border-radius: 6px;
-  color: var(--text-muted);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1rem;
-  transition: all .15s;
-}
+.btn-sm { padding: .35rem .8rem; font-size: .77rem; }
+.btn-large { padding: .85rem 2rem; font-size: .95rem; }
+.btn-icon-del { width: 28px; height: 28px; padding: 0; background: transparent; border: 1.5px solid var(--border); border-radius: 6px; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1rem; transition: all .15s; }
 .btn-icon-del:hover { background: var(--danger-light); border-color: var(--danger); color: var(--danger); }
 
-/* ─── Discount ───────────────────────────────────────────────── */
-#sectionDiscount .form-grid { padding-top: 1.25rem; }
-
-/* ─── Exclusions ─────────────────────────────────────────────── */
-.exclusions-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: .6rem;
-}
-
-.exclusion-item {
-  display: flex;
-  align-items: center;
-  gap: .6rem;
-  padding: .55rem .8rem;
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-sm);
-  background: var(--surface-2);
-  cursor: pointer;
-  transition: all .15s;
-  user-select: none;
-}
+/* ─── Exclusions ─── */
+.exclusions-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: .6rem; }
+.exclusion-item { display: flex; align-items: center; gap: .6rem; padding: .55rem .8rem; border: 1.5px solid var(--border); border-radius: var(--radius-sm); background: var(--surface-2); cursor: pointer; transition: all .15s; user-select: none; }
 .exclusion-item:hover { border-color: var(--accent-2); background: var(--accent-light); }
 .exclusion-item.checked { background: var(--accent-light); border-color: var(--accent-2); }
 .exclusion-item.checked .excl-label { color: var(--accent); font-weight: 600; }
-
-.excl-checkbox {
-  width: 17px;
-  height: 17px;
-  flex-shrink: 0;
-  border: 2px solid var(--border-strong);
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: .7rem;
-  transition: all .15s;
-  background: #fff;
-}
+.excl-checkbox { width: 17px; height: 17px; flex-shrink: 0; border: 2px solid var(--border-strong); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: .7rem; transition: all .15s; background: #fff; }
 .exclusion-item.checked .excl-checkbox { background: var(--accent-2); border-color: var(--accent-2); color: #fff; }
-
 .excl-label { font-size: .85rem; color: var(--text-secondary); flex: 1; }
-
-.add-exclusion-row {
-  display: flex;
-  gap: .6rem;
-}
+.add-exclusion-row { display: flex; gap: .6rem; }
 .add-exclusion-row input { flex: 1; }
 
-/* ─── Totals ─────────────────────────────────────────────────── */
+/* ─── Totals ─── */
 .totals-card .totals-table { border-top: none; }
-
-.totals-table {
-  display: flex;
-  flex-direction: column;
-  gap: .3rem;
-}
-
-.totals-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: .45rem .75rem;
-  border-radius: var(--radius-sm);
-  font-size: .9rem;
-}
-
-.totals-row.subtotal {
-  background: var(--surface-2);
-  font-weight: 700;
-  border-top: 1px solid var(--border);
-  margin-top: .25rem;
-  padding-top: .65rem;
-}
-
+.totals-table { display: flex; flex-direction: column; gap: .3rem; }
+.totals-row { display: flex; justify-content: space-between; align-items: center; padding: .45rem .75rem; border-radius: var(--radius-sm); font-size: .9rem; }
+.totals-row.subtotal { background: var(--surface-2); font-weight: 700; border-top: 1px solid var(--border); margin-top: .25rem; padding-top: .65rem; }
 .totals-row.discount-row { color: var(--danger); }
-
 .totals-row.tax { color: var(--text-secondary); font-size: .85rem; }
+.totals-row.grand-total { background: var(--accent); color: #fff; font-family: var(--font-display); font-size: 1.1rem; font-weight: 800; border-radius: var(--radius); margin-top: .5rem; padding: .85rem 1rem; box-shadow: 0 4px 16px rgba(26,61,110,.25); }
+.action-buttons { display: flex; justify-content: flex-end; gap: .75rem; padding-top: 1.25rem; border-top: 1px solid var(--border); margin-top: .5rem; }
 
-.totals-row.grand-total {
-  background: var(--accent);
-  color: #fff;
-  font-family: var(--font-display);
-  font-size: 1.1rem;
-  font-weight: 800;
-  border-radius: var(--radius);
-  margin-top: .5rem;
-  padding: .85rem 1rem;
-  box-shadow: 0 4px 16px rgba(26,61,110,.25);
-}
-
-.action-buttons {
-  display: flex;
-  justify-content: flex-end;
-  padding-top: 1.25rem;
-  border-top: 1px solid var(--border);
-  margin-top: .5rem;
-}
-
-/* ─── Modal ──────────────────────────────────────────────────── */
-.modal-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.45);
-  backdrop-filter: blur(3px);
-  z-index: 999;
-  align-items: center;
-  justify-content: center;
-}
+/* ─── Modal ─── */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45); backdrop-filter: blur(3px); z-index: 999; align-items: center; justify-content: center; }
 .modal-overlay.open { display: flex; }
-
-.modal {
-  background: var(--surface);
-  border-radius: var(--radius-lg);
-  padding: 2rem;
-  max-width: 400px;
-  width: 90%;
-  box-shadow: var(--shadow-lg);
-  animation: modalIn .2s ease;
-}
-
-@keyframes modalIn {
-  from { opacity: 0; transform: scale(.95); }
-  to   { opacity: 1; transform: scale(1); }
-}
-
-.modal h3 {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1rem;
-  margin-bottom: .75rem;
-}
-
+.modal { background: var(--surface); border-radius: var(--radius-lg); padding: 2rem; max-width: 400px; width: 90%; box-shadow: var(--shadow-lg); animation: modalIn .2s ease; }
+@keyframes modalIn { from { opacity: 0; transform: scale(.95); } to { opacity: 1; transform: scale(1); } }
+.modal h3 { font-family: var(--font-display); font-weight: 700; font-size: 1rem; margin-bottom: .75rem; }
 .modal p { color: var(--text-secondary); font-size: .9rem; line-height: 1.6; margin-bottom: 1.5rem; }
-
 .modal-actions { display: flex; gap: .75rem; justify-content: flex-end; }
 
-/* ─── Responsive ─────────────────────────────────────────────── */
+/* ─── Responsive ─── */
 @media (max-width: 900px) {
   .four-col  { grid-template-columns: repeat(2, 1fr); }
   .three-col { grid-template-columns: repeat(2, 1fr); }
+  .pitch-area-grid { grid-template-columns: repeat(2, 1fr); }
 }
-
 @media (max-width: 640px) {
   :root { --header-h: auto; }
-
   .app-header { position: relative; }
-  .header-inner {
-    flex-wrap: wrap;
-    padding: 1rem;
-    height: auto;
-    gap: .75rem;
-  }
+  .header-inner { flex-wrap: wrap; padding: 1rem; height: auto; gap: .75rem; }
   .header-actions { width: 100%; flex-wrap: wrap; }
   .quote-number-badge { order: -1; }
-
-  .four-col, .three-col, .two-col { grid-template-columns: 1fr; }
+  .four-col, .three-col, .two-col, .pitch-area-grid { grid-template-columns: 1fr; }
   .field-wide { grid-column: span 1; }
-
   .work-type-tabs { gap: .4rem; }
   .tab-btn { font-size: .75rem; padding: .45rem .8rem; }
-
   .app-main { padding: 1rem; gap: 1rem; }
-
   .col-desc { min-width: 140px; }
   .col-qty, .col-unit { width: 70px; }
   .col-price, .col-total { width: 90px; }
-
-  .action-buttons { justify-content: stretch; }
+  .action-buttons { justify-content: stretch; flex-direction: column; }
   .action-buttons .btn { width: 100%; justify-content: center; }
+  .map-container { height: 260px; }
 }
-
-/* ─── Print (safety) ─────────────────────────────────────────── */
 @media print { body { display: none; } }
   </style>
 </head>
@@ -656,9 +267,7 @@ select { cursor: pointer; }
 
 <main class="app-main">
 
-  <!-- ═══════════════════════════════════════════
-       SECTION 1 — INFOS ENTREPRISE
-  ══════════════════════════════════════════════ -->
+  <!-- SECTION 1 — INFOS ENTREPRISE -->
   <section class="card" id="sectionCompany">
     <div class="card-header">
       <span class="card-icon">🏢</span>
@@ -666,56 +275,66 @@ select { cursor: pointer; }
       <span class="card-badge saved-badge" id="companySavedBadge">✓ Mémorisé</span>
     </div>
     <div class="form-grid four-col">
-      <div class="field">
-        <label>Nom de l'entreprise</label>
-        <input type="text" id="companyName" placeholder="Toitures Dupont Inc." />
-      </div>
-      <div class="field">
-        <label>Téléphone</label>
-        <input type="tel" id="companyPhone" placeholder="514-555-0100" />
-      </div>
-      <div class="field">
-        <label>Courriel</label>
-        <input type="email" id="companyEmail" placeholder="info@toituresdupont.ca" />
-      </div>
-      <div class="field">
-        <label>Numéro RBQ</label>
-        <input type="text" id="companyRBQ" placeholder="5678-9012-34" />
-      </div>
+      <div class="field"><label>Nom de l'entreprise</label><input type="text" id="companyName" placeholder="Toitures Dupont Inc." /></div>
+      <div class="field"><label>Téléphone</label><input type="tel" id="companyPhone" placeholder="514-555-0100" /></div>
+      <div class="field"><label>Courriel</label><input type="email" id="companyEmail" placeholder="info@toituresdupont.ca" /></div>
+      <div class="field"><label>Numéro RBQ</label><input type="text" id="companyRBQ" placeholder="5678-9012-34" /></div>
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════
-       SECTION 2 — INFOS CLIENT
-  ══════════════════════════════════════════════ -->
+  <!-- SECTION 2 — INFOS CLIENT -->
   <section class="card" id="sectionClient">
     <div class="card-header">
       <span class="card-icon">👤</span>
       <h2>Informations du client</h2>
     </div>
     <div class="form-grid four-col">
-      <div class="field">
-        <label>Nom du client</label>
-        <input type="text" id="clientName" placeholder="Jean Tremblay" />
-      </div>
-      <div class="field">
-        <label>Téléphone</label>
-        <input type="tel" id="clientPhone" placeholder="438-555-0200" />
-      </div>
-      <div class="field">
-        <label>Courriel</label>
-        <input type="email" id="clientEmail" placeholder="jean@exemple.ca" />
-      </div>
+      <div class="field"><label>Nom du client</label><input type="text" id="clientName" placeholder="Jean Tremblay" /></div>
+      <div class="field"><label>Téléphone</label><input type="tel" id="clientPhone" placeholder="438-555-0200" /></div>
+      <div class="field"><label>Courriel</label><input type="email" id="clientEmail" placeholder="jean@exemple.ca" /></div>
       <div class="field field-wide">
         <label>Adresse des travaux</label>
-        <input type="text" id="clientAddress" placeholder="123 rue des Érables, Montréal, QC H2X 1A1" />
+        <input type="text" id="clientAddress" placeholder="123 rue des Érables, Montréal, QC H2X 1A1" autocomplete="off" />
       </div>
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════
-       SECTION 3 — TYPE DE TRAVAUX
-  ══════════════════════════════════════════════ -->
+  <!-- SECTION 2b — CARTE SATELLITE -->
+  <section class="card" id="sectionMap">
+    <div class="card-header">
+      <span class="card-icon">🛰️</span>
+      <h2>Mesure satellite du toit</h2>
+      <span style="font-size:.78rem;color:var(--text-muted);margin-left:auto">Tracez le contour du toit pour calculer la superficie</span>
+    </div>
+    <div id="mapNoKey" class="map-no-key" style="display:none">
+      <div class="map-no-key-box">
+        <h3>⚙️ Clé Google Maps requise</h3>
+        <p>Pour activer la carte satellite, ajoutez votre clé dans Vercel :<br>
+        <strong>Settings → Environment Variables → </strong><code>GOOGLE_MAPS_API_KEY</code> = votre clé<br><br>
+        Obtenez une clé gratuite sur <strong>console.cloud.google.com</strong> (Maps JavaScript API + Places API).<br>
+        La carte fonctionne dès que la variable est configurée.</p>
+      </div>
+    </div>
+    <div id="mapReady" class="map-section" style="display:none">
+      <div class="map-toolbar">
+        <span class="map-toolbar-label">Outils :</span>
+        <button class="btn-map-action btn-map-draw" id="btnDrawPolygon">✏️ Tracer le toit</button>
+        <button class="btn-map-action btn-map-clear" id="btnClearPolygon">🗑 Effacer</button>
+        <button class="btn-map-action btn-map-apply" id="btnApplyArea" style="display:none">✅ Utiliser cette superficie</button>
+        <button class="btn-map-action" id="btnLocateAddress" style="background:var(--surface-2);color:var(--accent);border:1.5px solid var(--border)">📍 Localiser l'adresse</button>
+      </div>
+      <div class="map-container">
+        <div id="satelliteMap"></div>
+      </div>
+      <div class="map-result-banner hidden" id="mapResultBanner">
+        <span class="map-result-area" id="mapResultArea">0 pi²</span>
+        <span class="map-result-label">superficie tracée (projetée horizontalement)</span>
+      </div>
+      <p class="map-tip">💡 <strong>Comment utiliser :</strong> Cliquez "Tracer le toit" puis cliquez sur les coins du toit sur la carte. Double-cliquez pour fermer le polygone. La superficie s'affiche automatiquement en bas. Cliquez "Utiliser cette superficie" pour transférer vers le formulaire.</p>
+    </div>
+  </section>
+
+  <!-- SECTION 3 — TYPE DE TRAVAUX -->
   <section class="card" id="sectionWork">
     <div class="card-header">
       <span class="card-icon">🔨</span>
@@ -727,10 +346,24 @@ select { cursor: pointer; }
       <button class="tab-btn" data-type="plate">Toiture plate</button>
       <button class="tab-btn" data-type="bardeau">Bardeau asphalte</button>
     </div>
-    <div class="form-grid three-col" style="margin-top:1.5rem">
+    <div class="pitch-area-grid" style="padding: 1.25rem 1.5rem 1.5rem">
       <div class="field">
-        <label>Superficie (pi²)</label>
+        <label>Superficie au sol (pi²)</label>
         <input type="number" id="superficie" placeholder="2500" min="1" />
+        <span class="superficie-adjusted" id="superficieAdjusted"></span>
+      </div>
+      <div class="field">
+        <label>Pente du toit</label>
+        <select id="roofPitch">
+          <option value="1.000">Plate / 0:12 — ×1.000</option>
+          <option value="1.054">Légère / 3:12 — ×1.054</option>
+          <option value="1.118" selected>Normale / 4:12 — ×1.118</option>
+          <option value="1.202">Modérée / 6:12 — ×1.202</option>
+          <option value="1.302">Prononcée / 8:12 — ×1.302</option>
+          <option value="1.414">Raide / 10:12 — ×1.414</option>
+          <option value="1.562">Très raide / 12:12 — ×1.562</option>
+        </select>
+        <span class="pitch-factor-badge" id="pitchBadge">Facteur : ×1.118</span>
       </div>
       <div class="field">
         <label>Date de début prévue</label>
@@ -743,14 +376,16 @@ select { cursor: pointer; }
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════
-       SECTION 4 — MATÉRIAUX
-  ══════════════════════════════════════════════ -->
+  <!-- SECTION 4 — MATÉRIAUX -->
   <section class="card" id="sectionMaterials">
     <div class="card-header">
       <span class="card-icon">🪨</span>
       <h2>Matériaux</h2>
       <button class="btn btn-sm btn-outline" id="btnAddMaterial">+ Ajouter ligne</button>
+    </div>
+    <div class="autocalc-banner hidden" id="autocalcBanner">
+      <span id="autocalcMsg">✦ Quantités calculées automatiquement selon la superficie corrigée.</span>
+      <button class="btn btn-sm btn-warning" id="btnRecalc">↺ Recalculer les matériaux</button>
     </div>
     <div class="table-wrapper">
       <table class="items-table" id="materialsTable">
@@ -776,9 +411,7 @@ select { cursor: pointer; }
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════
-       SECTION 5 — MAIN-D'ŒUVRE
-  ══════════════════════════════════════════════ -->
+  <!-- SECTION 5 — MAIN-D'ŒUVRE -->
   <section class="card" id="sectionLabor">
     <div class="card-header">
       <span class="card-icon">👷</span>
@@ -809,9 +442,7 @@ select { cursor: pointer; }
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════
-       SECTION 6 — ESCOMPTE
-  ══════════════════════════════════════════════ -->
+  <!-- SECTION 6 — ESCOMPTE -->
   <section class="card" id="sectionDiscount">
     <div class="card-header">
       <span class="card-icon">🏷️</span>
@@ -837,9 +468,7 @@ select { cursor: pointer; }
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════
-       SECTION 7 — GARANTIES & PAIEMENT
-  ══════════════════════════════════════════════ -->
+  <!-- SECTION 7 — GARANTIES -->
   <section class="card" id="sectionWarranty">
     <div class="card-header">
       <span class="card-icon">🛡️</span>
@@ -849,10 +478,8 @@ select { cursor: pointer; }
       <div class="field">
         <label>Garantie main-d'œuvre</label>
         <select id="laborWarranty">
-          <option value="1 an">1 an</option>
-          <option value="2 ans">2 ans</option>
-          <option value="3 ans">3 ans</option>
-          <option value="5 ans" selected>5 ans</option>
+          <option value="1 an">1 an</option><option value="2 ans">2 ans</option>
+          <option value="3 ans">3 ans</option><option value="5 ans" selected>5 ans</option>
           <option value="10 ans">10 ans</option>
         </select>
       </div>
@@ -860,12 +487,9 @@ select { cursor: pointer; }
         <label>Fabricant</label>
         <select id="manufacturer">
           <option value="">— Sélectionner —</option>
-          <option value="IKO">IKO</option>
-          <option value="CertainTeed">CertainTeed</option>
-          <option value="BP">BP (Building Products)</option>
-          <option value="Owens Corning">Owens Corning</option>
-          <option value="GAF">GAF</option>
-          <option value="Soprema">Soprema</option>
+          <option value="IKO">IKO</option><option value="CertainTeed">CertainTeed</option>
+          <option value="BP">BP (Building Products)</option><option value="Owens Corning">Owens Corning</option>
+          <option value="GAF">GAF</option><option value="Soprema">Soprema</option>
         </select>
       </div>
       <div class="field">
@@ -885,25 +509,21 @@ select { cursor: pointer; }
       <div class="field">
         <label>Validité de la soumission</label>
         <select id="quoteValidity">
-          <option value="15 jours">15 jours</option>
-          <option value="30 jours" selected>30 jours</option>
-          <option value="45 jours">45 jours</option>
-          <option value="60 jours">60 jours</option>
+          <option value="15 jours">15 jours</option><option value="30 jours" selected>30 jours</option>
+          <option value="45 jours">45 jours</option><option value="60 jours">60 jours</option>
         </select>
       </div>
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════
-       SECTION 8 — EXCLUSIONS
-  ══════════════════════════════════════════════ -->
+  <!-- SECTION 8 — EXCLUSIONS -->
   <section class="card" id="sectionExclusions">
     <div class="card-header">
       <span class="card-icon">🚫</span>
       <h2>Exclusions (non inclus dans la soumission)</h2>
     </div>
     <div class="exclusions-grid" id="exclusionsGrid"></div>
-    <div class="field" style="margin-top:1rem">
+    <div class="field" style="margin: 1rem 1.5rem 1.25rem">
       <label>Exclusion personnalisée à ajouter</label>
       <div class="add-exclusion-row">
         <input type="text" id="customExclusionInput" placeholder="Décrire une exclusion supplémentaire…" />
@@ -912,9 +532,7 @@ select { cursor: pointer; }
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════
-       SECTION 9 — NOTES
-  ══════════════════════════════════════════════ -->
+  <!-- SECTION 9 — NOTES -->
   <section class="card" id="sectionNotes">
     <div class="card-header">
       <span class="card-icon">📝</span>
@@ -923,80 +541,55 @@ select { cursor: pointer; }
     <textarea id="notes" rows="4" placeholder="Conditions particulières, accès au chantier, coordonnées additionnelles…"></textarea>
   </section>
 
-  <!-- ═══════════════════════════════════════════
-       SECTION TOTAUX
-  ══════════════════════════════════════════════ -->
+  <!-- TOTAUX -->
   <section class="card totals-card" id="sectionTotals">
     <div class="card-header">
       <span class="card-icon">💰</span>
       <h2>Résumé des coûts</h2>
     </div>
     <div class="totals-table">
-      <div class="totals-row">
-        <span>Sous-total matériaux</span>
-        <span id="totalMaterials">0,00 $</span>
-      </div>
-      <div class="totals-row">
-        <span>Sous-total main-d'œuvre</span>
-        <span id="totalLabor">0,00 $</span>
-      </div>
-      <div class="totals-row subtotal">
-        <span>Sous-total avant taxes</span>
-        <span id="subtotalBeforeTax">0,00 $</span>
-      </div>
-      <div class="totals-row discount-row" id="discountRow" style="display:none">
-        <span id="discountLabel">Escompte</span>
-        <span id="discountAmount">-0,00 $</span>
-      </div>
-      <div class="totals-row" id="afterDiscountRow" style="display:none">
-        <span>Sous-total après escompte</span>
-        <span id="subtotalAfterDiscount">0,00 $</span>
-      </div>
-      <div class="totals-row tax">
-        <span>TPS (5%)</span>
-        <span id="tps">0,00 $</span>
-      </div>
-      <div class="totals-row tax">
-        <span>TVQ (9,975%)</span>
-        <span id="tvq">0,00 $</span>
-      </div>
-      <div class="totals-row grand-total">
-        <span>TOTAL</span>
-        <span id="grandTotal">0,00 $</span>
-      </div>
+      <div class="totals-row"><span>Sous-total matériaux</span><span id="totalMaterials">0,00 $</span></div>
+      <div class="totals-row"><span>Sous-total main-d'œuvre</span><span id="totalLabor">0,00 $</span></div>
+      <div class="totals-row subtotal"><span>Sous-total avant taxes</span><span id="subtotalBeforeTax">0,00 $</span></div>
+      <div class="totals-row discount-row" id="discountRow" style="display:none"><span id="discountLabel">Escompte</span><span id="discountAmount">-0,00 $</span></div>
+      <div class="totals-row" id="afterDiscountRow" style="display:none"><span>Sous-total après escompte</span><span id="subtotalAfterDiscount">0,00 $</span></div>
+      <div class="totals-row tax"><span>TPS (5%)</span><span id="tps">0,00 $</span></div>
+      <div class="totals-row tax"><span>TVQ (9,975%)</span><span id="tvq">0,00 $</span></div>
+      <div class="totals-row grand-total"><span>TOTAL TTC</span><span id="grandTotal">0,00 $</span></div>
     </div>
     <div class="action-buttons">
-      <button class="btn btn-primary btn-large" id="btnDownloadPDF">
-        <span>⬇ Télécharger PDF</span>
-      </button>
+      <button class="btn btn-primary btn-large" id="btnDownloadPDF">⬇ Télécharger PDF</button>
     </div>
   </section>
 
 </main>
 
-<!-- MODAL CONFIRMATION -->
+<!-- MODAL -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
     <h3 id="modalTitle">Confirmation</h3>
     <p id="modalMessage"></p>
     <div class="modal-actions">
-      <button class="btn btn-secondary" id="modalCancel">Annuler</button>
+      <button class="btn btn-secondary" id="modalCancel" style="background:var(--surface-2);color:var(--text-secondary);border:1.5px solid var(--border)">Annuler</button>
       <button class="btn btn-danger" id="modalConfirm">Confirmer</button>
     </div>
   </div>
 </div>
 
-
 <script>
-/* ═══════════════════════════════════════════════════════════════
-   SOUMISSIONS TOITURE PRO — Application Logic
-═══════════════════════════════════════════════════════════════ */
-
 'use strict';
 
-/* ─── Constants ──────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════
+   CONSTANTS
+═══════════════════════════════════════════════════════ */
 const TPS_RATE = 0.05;
 const TVQ_RATE = 0.09975;
+
+// Pitch multipliers: flat area → true sloped area
+const PITCH_FACTORS = {
+  '1.000': 1.000, '1.054': 1.054, '1.118': 1.118,
+  '1.202': 1.202, '1.302': 1.302, '1.414': 1.414, '1.562': 1.562,
+};
 
 const MANUFACTURER_WARRANTIES = {
   IKO: '25 ans limité (IKO Dynasty / Cambridge)',
@@ -1014,39 +607,40 @@ const WORK_TYPES = {
   bardeau: 'Bardeau asphalte',
 };
 
+// Base material templates (qty will be overridden by auto-calc when superficie is set)
 const DEFAULT_MATERIALS = {
   remplacement: [
-    { desc: 'Bardeaux asphalte architectural 30 ans', qty: 25, unit: 'sq', price: 120 },
-    { desc: 'Membrane sous-couche synthétique', qty: 25, unit: 'sq', price: 18 },
-    { desc: 'Membrane auto-adhésive (rives & noues)', qty: 4, unit: 'sq', price: 85 },
+    { desc: 'Bardeaux asphalte architectural 30 ans', qty: 25, unit: 'bte', price: 120, autoKey: 'bardeaux' },
+    { desc: 'Membrane sous-couche synthétique', qty: 3, unit: 'rouleau', price: 95, autoKey: 'souscouche' },
+    { desc: 'Membrane auto-adhésive Ice & Water (rives)', qty: 4, unit: 'rouleau', price: 110, autoKey: 'icewater' },
     { desc: 'Ventilation de faîte (ridge vent)', qty: 30, unit: 'pi', price: 8 },
     { desc: 'Solin aluminium (cheminée, murs, évent)', qty: 1, unit: 'for', price: 320 },
-    { desc: 'Clous à toiture galvanisés', qty: 6, unit: 'bte', price: 35 },
+    { desc: 'Clous à toiture galvanisés', qty: 6, unit: 'bte', price: 35, autoKey: 'clous' },
     { desc: 'Contreplaqué 5/8 OSB (si requis)', qty: 0, unit: 'feuille', price: 48 },
   ],
   reparation: [
     { desc: 'Bardeaux asphalte assortis (remplacement)', qty: 2, unit: 'bte', price: 65 },
-    { desc: 'Membrane auto-adhésive Ice & Water', qty: 1, unit: 'sq', price: 85 },
+    { desc: 'Membrane auto-adhésive Ice & Water', qty: 1, unit: 'rouleau', price: 110 },
     { desc: 'Solin de réparation aluminium', qty: 1, unit: 'for', price: 150 },
     { desc: 'Calfeutrant polyuréthane extérieur', qty: 2, unit: 'tube', price: 18 },
     { desc: 'Clous à toiture galvanisés', qty: 1, unit: 'bte', price: 35 },
   ],
   plate: [
-    { desc: 'Membrane EPDM 60 mil ou TPO 60 mil', qty: 20, unit: 'sq', price: 185 },
-    { desc: 'Isolant polyiso 2 po', qty: 20, unit: 'sq', price: 95 },
+    { desc: 'Membrane élastomère (EPDM/TPO 60 mil)', qty: 20, unit: 'sq', price: 185, autoKey: 'membrane_plate' },
+    { desc: 'Isolant polyiso 2 po', qty: 20, unit: 'sq', price: 95, autoKey: 'isolant_plate' },
     { desc: 'Membrane pare-vapeur', qty: 20, unit: 'sq', price: 22 },
     { desc: 'Drain de toit avec natte de drainage', qty: 2, unit: 'un.', price: 280 },
     { desc: 'Solins métalliques périmètre / parapet', qty: 60, unit: 'pi', price: 14 },
-    { desc: 'Colle et fixations spéciales (toiture plate)', qty: 1, unit: 'for', price: 450 },
+    { desc: 'Colle et fixations spéciales', qty: 1, unit: 'for', price: 450 },
   ],
   bardeau: [
-    { desc: 'Bardeaux asphalte architectural IKO Cambridge 40', qty: 25, unit: 'sq', price: 145 },
-    { desc: 'Membrane sous-couche synthétique Hi-Dry 30#', qty: 25, unit: 'sq', price: 18 },
-    { desc: 'Ice & Water Shield (rive de toit 2 rangées)', qty: 5, unit: 'sq', price: 85 },
+    { desc: 'Bardeaux asphalte architectural IKO Cambridge 40', qty: 25, unit: 'bte', price: 145, autoKey: 'bardeaux' },
+    { desc: 'Membrane sous-couche synthétique Hi-Dry 30#', qty: 3, unit: 'rouleau', price: 95, autoKey: 'souscouche' },
+    { desc: 'Ice & Water Shield (rives de toit 2 rangées)', qty: 4, unit: 'rouleau', price: 110, autoKey: 'icewater' },
     { desc: 'Bardeaux de faîte', qty: 8, unit: 'bte', price: 55 },
     { desc: 'Solin aluminium peint (cheminée, murs)', qty: 1, unit: 'for', price: 300 },
     { desc: 'Ventilation passive (turbines ou ridge vent)', qty: 3, unit: 'un.', price: 90 },
-    { desc: 'Clous à toiture galvanisés 1-3/4 po', qty: 6, unit: 'bte', price: 35 },
+    { desc: 'Clous à toiture galvanisés 1-3/4 po', qty: 6, unit: 'bte', price: 35, autoKey: 'clous' },
   ],
 };
 
@@ -1068,7 +662,7 @@ const DEFAULT_LABOR = {
     { desc: 'Installation isolant et pare-vapeur', qty: 20, unit: 'sq', price: 45 },
     { desc: 'Installation membrane (soudage/colle)', qty: 20, unit: 'sq', price: 110 },
     { desc: 'Installation solins périmètre', qty: 1, unit: 'for', price: 750 },
-    { desc: 'Test d\'étanchéité et finition', qty: 1, unit: 'for', price: 350 },
+    { desc: "Test d'étanchéité et finition", qty: 1, unit: 'for', price: 350 },
   ],
   bardeau: [
     { desc: 'Dépose bardeaux et nettoyage', qty: 1, unit: 'for', price: 1200 },
@@ -1080,48 +674,15 @@ const DEFAULT_LABOR = {
 };
 
 const DEFAULT_EXCLUSIONS = {
-  remplacement: [
-    'Réparation ou remplacement de la charpente (si requis)',
-    'Traitement de la moisissure ou des champignons',
-    'Travaux de peinture ou de finition intérieure',
-    'Isolation supplémentaire non prévue',
-    'Réparation des gouttières et descentes pluviales',
-    'Permis de construction (à la charge du client)',
-    'Travaux de maçonnerie ou de cheminée',
-    'Déblaiement des accès obstrués',
-    'Bacs à fleurs, climatiseurs ou antennes sur le toit',
-  ],
-  reparation: [
-    'Remplacement complet de la toiture',
-    'Travaux de charpente non identifiés',
-    'Remplacement des gouttières',
-    'Permis de construction',
-    'Traitement de la moisissure',
-    'Isolation supplémentaire',
-  ],
-  plate: [
-    'Réparation de la structure portante',
-    'Travaux de drainage intérieur',
-    'Imperméabilisation des fondations',
-    'Isolation thermique supplémentaire non prévue',
-    'Permis de construction',
-    'Traitement de la moisissure',
-    'Installation de puits de lumière',
-    'Accès difficile non identifié lors de la visite',
-  ],
-  bardeau: [
-    'Réparation de la charpente au-delà du diagnostic',
-    'Remplacement des gouttières et descentes',
-    'Travaux de maçonnerie (cheminée)',
-    'Traitement de la moisissure',
-    'Isolation supplémentaire',
-    'Permis de construction',
-    'Dépose de panneaux solaires',
-    'Calfeutrage de fenêtres de toit (Velux)',
-  ],
+  remplacement: ['Réparation ou remplacement de la charpente (si requis)','Traitement de la moisissure ou des champignons','Travaux de peinture ou de finition intérieure','Isolation supplémentaire non prévue','Réparation des gouttières et descentes pluviales','Permis de construction (à la charge du client)','Travaux de maçonnerie ou de cheminée','Déblaiement des accès obstrués','Bacs à fleurs, climatiseurs ou antennes sur le toit'],
+  reparation: ['Remplacement complet de la toiture','Travaux de charpente non identifiés','Remplacement des gouttières','Permis de construction','Traitement de la moisissure','Isolation supplémentaire'],
+  plate: ['Réparation de la structure portante','Travaux de drainage intérieur','Imperméabilisation des fondations','Isolation thermique supplémentaire non prévue','Permis de construction','Traitement de la moisissure','Installation de puits de lumière','Accès difficile non identifié lors de la visite'],
+  bardeau: ['Réparation de la charpente au-delà du diagnostic','Remplacement des gouttières et descentes','Travaux de maçonnerie (cheminée)','Traitement de la moisissure','Isolation supplémentaire','Permis de construction','Dépose de panneaux solaires','Calfeutrage de fenêtres de toit (Velux)'],
 };
 
-/* ─── State ──────────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════════════════ */
 let state = {
   quoteNumber: null,
   workType: 'remplacement',
@@ -1129,17 +690,21 @@ let state = {
   labor: [],
   exclusions: [],
   customExclusions: [],
+  lastAutoCalcSuperficie: null,  // superficie used for last auto-calc
 };
 let saveTimer = null;
-let dirtyFlag = false;
+let mapInstance = null;
+let drawingManager = null;
+let currentPolygon = null;
+let isDrawing = false;
+let tracedAreaSqFt = 0;
 
-/* ─── DOM refs ───────────────────────────────────────────────── */
 const $ = id => document.getElementById(id);
 const $$ = sel => document.querySelectorAll(sel);
 
-/* ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════
    INIT
-═══════════════════════════════════════════════════════════════ */
+═══════════════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', () => {
   loadCompanyFromStorage();
   initQuoteNumber();
@@ -1147,10 +712,10 @@ document.addEventListener('DOMContentLoaded', () => {
   loadQuoteFromStorage();
   bindEvents();
   setStatus('saved');
-  setupAutoSave();
+  initGoogleMaps();
 });
 
-/* ─── Quote Number ───────────────────────────────────────────── */
+/* ─── Quote Number ─── */
 function initQuoteNumber() {
   const year = new Date().getFullYear();
   const stored = localStorage.getItem('rtp_lastQuoteNumber');
@@ -1158,11 +723,7 @@ function initQuoteNumber() {
     state.quoteNumber = `${year}-001`;
   } else {
     const [y, seq] = stored.split('-');
-    if (parseInt(y) < year) {
-      state.quoteNumber = `${year}-001`;
-    } else {
-      state.quoteNumber = stored;
-    }
+    state.quoteNumber = parseInt(y) < year ? `${year}-001` : stored;
   }
   $('quoteNumberBadge').textContent = `N° ${state.quoteNumber}`;
 }
@@ -1175,12 +736,11 @@ function incrementQuoteNumber() {
   $('quoteNumberBadge').textContent = `N° ${state.quoteNumber}`;
 }
 
-/* ─── Company ────────────────────────────────────────────────── */
+/* ─── Company ─── */
 function loadCompanyFromStorage() {
-  const data = localStorage.getItem('rtp_company');
-  if (!data) return;
   try {
-    const co = JSON.parse(data);
+    const co = JSON.parse(localStorage.getItem('rtp_company') || 'null');
+    if (!co) return;
     $('companyName').value  = co.name  || '';
     $('companyPhone').value = co.phone || '';
     $('companyEmail').value = co.email || '';
@@ -1189,36 +749,244 @@ function loadCompanyFromStorage() {
 }
 
 function saveCompanyToStorage() {
-  const co = {
-    name:  $('companyName').value,
-    phone: $('companyPhone').value,
-    email: $('companyEmail').value,
-    rbq:   $('companyRBQ').value,
-  };
-  localStorage.setItem('rtp_company', JSON.stringify(co));
+  localStorage.setItem('rtp_company', JSON.stringify({
+    name: $('companyName').value, phone: $('companyPhone').value,
+    email: $('companyEmail').value, rbq: $('companyRBQ').value,
+  }));
   $('companySavedBadge').style.opacity = '1';
-  setTimeout(() => { $('companySavedBadge').style.opacity = '.5'; }, 1000);
+  setTimeout(() => { $('companySavedBadge').style.opacity = '.5'; }, 1200);
 }
 
-/* ─── Work Type ──────────────────────────────────────────────── */
+/* ─── Work Type ─── */
 function setWorkType(type, reload = true) {
   state.workType = type;
-  $$('#workTypeTabs .tab-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.type === type);
-  });
+  $$('#workTypeTabs .tab-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.type === type));
   if (reload) {
     state.materials = DEFAULT_MATERIALS[type].map(m => ({ ...m, id: uid() }));
-    state.labor = DEFAULT_LABOR[type].map(l => ({ ...l, id: uid() }));
+    state.labor     = DEFAULT_LABOR[type].map(l => ({ ...l, id: uid() }));
     state.exclusions = DEFAULT_EXCLUSIONS[type].map(e => ({ text: e, checked: true, custom: false, id: uid() }));
     state.customExclusions = [];
+    // Auto-calc if superficie already set
+    const sup = parseFloat($('superficie').value);
+    if (sup > 0) autoCalcQuantities(sup, false);
     renderMaterials();
     renderLabor();
     renderExclusions();
     calcTotals();
+    markDirty();
   }
 }
 
-/* ─── Rows rendering ─────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════
+   AUTO-CALC QUANTITIES
+═══════════════════════════════════════════════════════ */
+function getAdjustedSuperficie() {
+  const raw = parseFloat($('superficie').value) || 0;
+  const pitch = parseFloat($('roofPitch').value) || 1.118;
+  return raw * pitch;
+}
+
+function autoCalcQuantities(rawSqFt, showBanner = true) {
+  const pitch = parseFloat($('roofPitch').value) || 1.118;
+  const adj = rawSqFt * pitch;  // corrected area
+
+  // Estimate perimeter from area (square approximation √area × 4)
+  const perimEst = Math.sqrt(rawSqFt) * 4;
+
+  const calcs = {
+    bardeaux:       Math.ceil((adj / 33.3) * 1.10),   // bundles +10% waste
+    souscouche:     Math.ceil(adj / 200),               // rouleaux
+    icewater:       Math.ceil((perimEst * 3) / 75),    // rouleaux
+    clous:          Math.max(1, Math.ceil(Math.ceil((adj / 33.3) * 1.10) / 100)), // 1 bte / 100 bundles
+    membrane_plate: Math.ceil((adj * 1.15) / 100),    // sq (×1.15 overlap)
+    isolant_plate:  Math.ceil(adj / 100),              // sq
+  };
+
+  state.materials = state.materials.map(m => {
+    if (m.autoKey && calcs[m.autoKey] !== undefined) {
+      return { ...m, qty: calcs[m.autoKey], autoCalced: true };
+    }
+    return m;
+  });
+
+  state.lastAutoCalcSuperficie = rawSqFt;
+
+  if (showBanner) {
+    const banner = $('autocalcBanner');
+    banner.classList.remove('hidden', 'autocalc-changed');
+    $('autocalcMsg').textContent = `✦ Quantités recalculées — superficie corrigée : ${Math.round(adj).toLocaleString('fr-CA')} pi² (×${pitch} pente)`;
+  }
+
+  renderMaterials();
+  updateSubtotals();
+}
+
+function checkIfSuperficieChanged() {
+  const current = parseFloat($('superficie').value) || 0;
+  if (state.lastAutoCalcSuperficie !== null && current !== state.lastAutoCalcSuperficie) {
+    const banner = $('autocalcBanner');
+    if (!banner.classList.contains('hidden')) {
+      banner.classList.add('autocalc-changed');
+      $('autocalcMsg').textContent = `⚠ La superficie a changé depuis le dernier calcul. Cliquez "Recalculer" pour mettre à jour.`;
+    }
+  }
+}
+
+/* ─── Pitch badge ─── */
+function updatePitchBadge() {
+  const pitch = parseFloat($('roofPitch').value) || 1.118;
+  $('pitchBadge').textContent = `Facteur : ×${pitch.toFixed(3)}`;
+  const raw = parseFloat($('superficie').value) || 0;
+  if (raw > 0) {
+    const adj = Math.round(raw * pitch);
+    $('superficieAdjusted').textContent = `→ Surface réelle corrigée : ${adj.toLocaleString('fr-CA')} pi²`;
+  } else {
+    $('superficieAdjusted').textContent = '';
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   GOOGLE MAPS
+═══════════════════════════════════════════════════════ */
+function initGoogleMaps() {
+  // API key is injected at build time via Vercel env var __GOOGLE_MAPS_API_KEY__
+  const apiKey = '__GOOGLE_MAPS_API_KEY__';
+
+  if (!apiKey || apiKey === '__GOOGLE_MAPS_API_KEY__' || apiKey.trim() === '') {
+    $('mapNoKey').style.display = '';
+    $('mapReady').style.display = 'none';
+    return;
+  }
+
+  $('mapNoKey').style.display = 'none';
+  $('mapReady').style.display = '';
+
+  // Dynamically load Maps JS API
+  window._mapsReadyCallback = function() { setupMap(); };
+  const script = document.createElement('script');
+  script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=drawing,places,geometry&callback=_mapsReadyCallback`;
+  script.async = true;
+  script.onerror = () => {
+    $('mapReady').innerHTML = `<div class="map-no-key"><div class="map-no-key-box"><h3>❌ Erreur de chargement de la carte</h3><p>Vérifiez que votre clé API est valide et que les APIs <strong>Maps JavaScript</strong>, <strong>Places</strong> et <strong>Geometry</strong> sont activées dans Google Cloud Console.</p></div></div>`;
+  };
+  document.head.appendChild(script);
+}
+
+function setupMap() {
+  const montreal = { lat: 45.5017, lng: -73.5673 };
+  mapInstance = new google.maps.Map($('satelliteMap'), {
+    center: montreal,
+    zoom: 19,
+    mapTypeId: 'satellite',
+    tilt: 0,
+    mapTypeControl: false,
+    streetViewControl: false,
+    fullscreenControl: true,
+    zoomControl: true,
+  });
+
+  drawingManager = new google.maps.drawing.DrawingManager({
+    drawingMode: null,
+    drawingControl: false,
+    polygonOptions: {
+      fillColor: '#2563eb',
+      fillOpacity: 0.25,
+      strokeColor: '#2563eb',
+      strokeWeight: 2.5,
+      editable: true,
+      draggable: true,
+    },
+  });
+  drawingManager.setMap(mapInstance);
+
+  google.maps.event.addListener(drawingManager, 'polygoncomplete', function(polygon) {
+    if (currentPolygon) currentPolygon.setMap(null);
+    currentPolygon = polygon;
+    drawingManager.setDrawingMode(null);
+    isDrawing = false;
+    $('btnDrawPolygon').classList.remove('active');
+    $('btnDrawPolygon').textContent = '✏️ Retracer';
+    computePolygonArea(polygon);
+
+    // Recompute on vertex edit
+    google.maps.event.addListener(polygon.getPath(), 'set_at', () => computePolygonArea(polygon));
+    google.maps.event.addListener(polygon.getPath(), 'insert_at', () => computePolygonArea(polygon));
+    google.maps.event.addListener(polygon.getPath(), 'remove_at', () => computePolygonArea(polygon));
+  });
+
+  // Address autocomplete
+  const addressInput = $('clientAddress');
+  const autocomplete = new google.maps.places.Autocomplete(addressInput, {
+    types: ['address'],
+    componentRestrictions: { country: 'ca' },
+  });
+  autocomplete.addListener('place_changed', () => {
+    const place = autocomplete.getPlace();
+    if (place.geometry) {
+      mapInstance.setCenter(place.geometry.location);
+      mapInstance.setZoom(20);
+    }
+  });
+}
+
+function computePolygonArea(polygon) {
+  const areaSqM = google.maps.geometry.spherical.computeArea(polygon.getPath());
+  const areaSqFt = areaSqM * 10.7639;
+  tracedAreaSqFt = Math.round(areaSqFt);
+  $('mapResultArea').textContent = `${tracedAreaSqFt.toLocaleString('fr-CA')} pi²`;
+  $('mapResultBanner').classList.remove('hidden');
+  $('btnApplyArea').style.display = '';
+}
+
+function locateAddress() {
+  if (!mapInstance) return;
+  const addr = $('clientAddress').value.trim();
+  if (!addr) { alert('Entrez une adresse client d\'abord.'); return; }
+  const geocoder = new google.maps.Geocoder();
+  geocoder.geocode({ address: addr }, (results, status) => {
+    if (status === 'OK' && results[0]) {
+      mapInstance.setCenter(results[0].geometry.location);
+      mapInstance.setZoom(20);
+    } else {
+      alert('Adresse introuvable. Essayez une adresse plus précise.');
+    }
+  });
+}
+
+function toggleDraw() {
+  if (!drawingManager) return;
+  isDrawing = !isDrawing;
+  drawingManager.setDrawingMode(isDrawing ? google.maps.drawing.OverlayType.POLYGON : null);
+  const btn = $('btnDrawPolygon');
+  btn.classList.toggle('active', isDrawing);
+  btn.textContent = isDrawing ? '🔴 Annuler le tracé' : '✏️ Tracer le toit';
+}
+
+function clearPolygon() {
+  if (currentPolygon) { currentPolygon.setMap(null); currentPolygon = null; }
+  if (drawingManager) drawingManager.setDrawingMode(null);
+  isDrawing = false;
+  $('btnDrawPolygon').classList.remove('active');
+  $('btnDrawPolygon').textContent = '✏️ Tracer le toit';
+  $('mapResultBanner').classList.add('hidden');
+  $('btnApplyArea').style.display = 'none';
+  tracedAreaSqFt = 0;
+}
+
+function applyMapArea() {
+  if (!tracedAreaSqFt) return;
+  $('superficie').value = tracedAreaSqFt;
+  updatePitchBadge();
+  autoCalcQuantities(tracedAreaSqFt, true);
+  calcTotals();
+  markDirty();
+  // Smooth scroll to materials
+  setTimeout(() => $('sectionMaterials').scrollIntoView({ behavior: 'smooth', block: 'start' }), 300);
+}
+
+/* ═══════════════════════════════════════════════════════
+   ROW RENDERING
+═══════════════════════════════════════════════════════ */
 function renderMaterials() {
   const tbody = $('materialsTbody');
   tbody.innerHTML = '';
@@ -1235,7 +1003,8 @@ function renderLabor() {
 
 function createRow(row, prefix) {
   const tr = document.createElement('tr');
-  const units = ['pi²','sq','bte','for','h','pi','m','un.','feuille','tube','rouleau','sac'];
+  if (row.autoCalced) tr.classList.add('row-auto');
+  const units = ['bte','rouleau','sq','pi²','pi','m','un.','for','h','feuille','tube','sac'];
   tr.innerHTML = `
     <td><input type="text" value="${esc(row.desc)}" data-field="desc" data-id="${row.id}" data-prefix="${prefix}" class="item-input"/></td>
     <td><input type="number" value="${row.qty}" min="0" step="any" data-field="qty" data-id="${row.id}" data-prefix="${prefix}" class="item-input"/></td>
@@ -1255,7 +1024,7 @@ function esc(str) {
   return String(str||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
 }
 
-/* ─── Item input events ──────────────────────────────────────── */
+/* ─── Item input events ─── */
 document.addEventListener('input', e => {
   const el = e.target;
   if (!el.classList.contains('item-input')) return;
@@ -1263,14 +1032,11 @@ document.addEventListener('input', e => {
   const arr = prefix === 'mat' ? state.materials : state.labor;
   const row = arr.find(r => r.id === id);
   if (!row) return;
-  if (field === 'qty' || field === 'price') {
-    row[field] = parseFloat(el.value) || 0;
-  } else {
-    row[field] = el.value;
-  }
-  const total = (row.qty || 0) * (row.price || 0);
+  if (field === 'qty' || field === 'price') row[field] = parseFloat(el.value) || 0;
+  else row[field] = el.value;
+  if (field === 'qty') row.autoCalced = false; // manual override clears auto flag
   const cell = document.getElementById('total-' + id);
-  if (cell) cell.textContent = formatCAD(total);
+  if (cell) cell.textContent = formatCAD((row.qty||0) * (row.price||0));
   updateSubtotals();
   markDirty();
 });
@@ -1279,60 +1045,34 @@ document.addEventListener('click', e => {
   const btn = e.target.closest('[data-del]');
   if (!btn) return;
   const { del: id, prefix } = btn.dataset;
-  if (prefix === 'mat') {
-    state.materials = state.materials.filter(r => r.id !== id);
-    renderMaterials();
-  } else {
-    state.labor = state.labor.filter(r => r.id !== id);
-    renderLabor();
-  }
+  if (prefix === 'mat') state.materials = state.materials.filter(r => r.id !== id);
+  else state.labor = state.labor.filter(r => r.id !== id);
+  prefix === 'mat' ? renderMaterials() : renderLabor();
   markDirty();
 });
 
-function addMaterialRow() {
-  state.materials.push({ id: uid(), desc: '', qty: 1, unit: 'un.', price: 0 });
-  renderMaterials();
-  markDirty();
-}
-
-function addLaborRow() {
-  state.labor.push({ id: uid(), desc: '', qty: 1, unit: 'for', price: 0 });
-  renderLabor();
-  markDirty();
-}
-
-/* ─── Exclusions ─────────────────────────────────────────────── */
+/* ─── Exclusions ─── */
 function renderExclusions() {
   const grid = $('exclusionsGrid');
   grid.innerHTML = '';
-  const all = [
-    ...state.exclusions,
-    ...state.customExclusions,
-  ];
-  all.forEach(excl => {
+  [...state.exclusions, ...state.customExclusions].forEach(excl => {
     const div = document.createElement('div');
-    div.className = `exclusion-item${excl.checked ? ' checked' : ''}`;
-    div.dataset.id = excl.id;
+    div.className = `exclusion-item${excl.checked?' checked':''}`;
     div.innerHTML = `
-      <div class="excl-checkbox">${excl.checked ? '✓' : ''}</div>
+      <div class="excl-checkbox">${excl.checked?'✓':''}</div>
       <span class="excl-label">${esc(excl.text)}</span>
-      ${excl.custom ? `<button class="btn-icon-del" data-excl-del="${excl.id}" title="Supprimer" style="margin-left:auto">×</button>` : ''}
+      ${excl.custom?`<button class="btn-icon-del" data-excl-del="${excl.id}" style="margin-left:auto;flex-shrink:0">×</button>`:''}
     `;
     div.addEventListener('click', ev => {
       if (ev.target.closest('[data-excl-del]')) return;
-      excl.checked = !excl.checked;
-      renderExclusions();
-      markDirty();
+      excl.checked = !excl.checked; renderExclusions(); markDirty();
     });
-    const delBtn = div.querySelector('[data-excl-del]');
-    if (delBtn) {
-      delBtn.addEventListener('click', ev => {
-        ev.stopPropagation();
-        state.customExclusions = state.customExclusions.filter(ex => ex.id !== excl.id);
-        renderExclusions();
-        markDirty();
-      });
-    }
+    const del = div.querySelector('[data-excl-del]');
+    if (del) del.addEventListener('click', ev => {
+      ev.stopPropagation();
+      state.customExclusions = state.customExclusions.filter(x => x.id !== excl.id);
+      renderExclusions(); markDirty();
+    });
     grid.appendChild(div);
   });
 }
@@ -1343,168 +1083,151 @@ function addCustomExclusion() {
   if (!text) return;
   state.customExclusions.push({ id: uid(), text, checked: true, custom: true });
   input.value = '';
-  renderExclusions();
-  markDirty();
+  renderExclusions(); markDirty();
 }
 
-/* ─── Totals ─────────────────────────────────────────────────── */
+/* ─── Totals ─── */
 function updateSubtotals() {
-  const matSub = state.materials.reduce((sum, r) => sum + (r.qty||0)*(r.price||0), 0);
-  const labSub = state.labor.reduce((sum, r) => sum + (r.qty||0)*(r.price||0), 0);
+  const matSub = state.materials.reduce((s,r) => s+(r.qty||0)*(r.price||0), 0);
+  const labSub = state.labor.reduce((s,r) => s+(r.qty||0)*(r.price||0), 0);
   $('materialsSubtotal').textContent = formatCAD(matSub);
   $('laborSubtotal').textContent = formatCAD(labSub);
   calcTotals();
 }
 
 function calcTotals() {
-  const matSub = state.materials.reduce((sum, r) => sum + (r.qty||0)*(r.price||0), 0);
-  const labSub = state.labor.reduce((sum, r) => sum + (r.qty||0)*(r.price||0), 0);
+  const matSub = state.materials.reduce((s,r) => s+(r.qty||0)*(r.price||0), 0);
+  const labSub = state.labor.reduce((s,r) => s+(r.qty||0)*(r.price||0), 0);
   const beforeTax = matSub + labSub;
-
   $('totalMaterials').textContent = formatCAD(matSub);
   $('totalLabor').textContent = formatCAD(labSub);
   $('subtotalBeforeTax').textContent = formatCAD(beforeTax);
 
-  // Discount
   const dtype = $('discountType').value;
-  let discountAmt = 0;
+  let discAmt = 0;
   if (dtype !== 'none') {
     const val = parseFloat($('discountValue').value) || 0;
-    if (dtype === 'percent') discountAmt = beforeTax * (val / 100);
-    else discountAmt = val;
-    discountAmt = Math.min(discountAmt, beforeTax);
+    discAmt = dtype === 'percent' ? beforeTax * val / 100 : val;
+    discAmt = Math.min(discAmt, beforeTax);
   }
-
-  const discountRow = $('discountRow');
-  const afterDiscountRow = $('afterDiscountRow');
-  if (discountAmt > 0) {
+  if (discAmt > 0) {
     const reason = $('discountReason').value;
     $('discountLabel').textContent = dtype === 'percent'
-      ? `Escompte ${parseFloat($('discountValue').value)||0}%${reason ? ' — '+reason : ''}`
-      : `Escompte${reason ? ' — '+reason : ''}`;
-    $('discountAmount').textContent = `-${formatCAD(discountAmt)}`;
-    discountRow.style.display = '';
-    afterDiscountRow.style.display = '';
+      ? `Escompte ${parseFloat($('discountValue').value)||0}%${reason?' — '+reason:''}`
+      : `Escompte${reason?' — '+reason:''}`;
+    $('discountAmount').textContent = `-${formatCAD(discAmt)}`;
+    $('discountRow').style.display = '';
+    $('afterDiscountRow').style.display = '';
   } else {
-    discountRow.style.display = 'none';
-    afterDiscountRow.style.display = 'none';
+    $('discountRow').style.display = 'none';
+    $('afterDiscountRow').style.display = 'none';
   }
-
-  const taxable = beforeTax - discountAmt;
+  const taxable = beforeTax - discAmt;
   $('subtotalAfterDiscount').textContent = formatCAD(taxable);
-
-  const tps = taxable * TPS_RATE;
-  const tvq = taxable * TVQ_RATE;
-  const grand = taxable + tps + tvq;
-
+  const tps = taxable * TPS_RATE, tvq = taxable * TVQ_RATE;
   $('tps').textContent = formatCAD(tps);
   $('tvq').textContent = formatCAD(tvq);
-  $('grandTotal').textContent = formatCAD(grand);
+  $('grandTotal').textContent = formatCAD(taxable + tps + tvq);
 }
 
-/* ─── Manufacturer warranty ──────────────────────────────────── */
-function updateManufacturerWarranty() {
-  const m = $('manufacturer').value;
-  $('manufacturerWarranty').value = m ? MANUFACTURER_WARRANTIES[m] || '' : '';
-}
-
-/* ─── Events binding ─────────────────────────────────────────── */
+/* ─── Events ─── */
 function bindEvents() {
-  // Company fields
-  ['companyName','companyPhone','companyEmail','companyRBQ'].forEach(id => {
-    $(id).addEventListener('input', () => { saveCompanyToStorage(); markDirty(); });
+  ['companyName','companyPhone','companyEmail','companyRBQ'].forEach(id =>
+    $(id).addEventListener('input', () => { saveCompanyToStorage(); markDirty(); })
+  );
+
+  $$('#workTypeTabs .tab-btn').forEach(btn =>
+    btn.addEventListener('click', () => setWorkType(btn.dataset.type))
+  );
+
+  $('superficie').addEventListener('input', () => {
+    updatePitchBadge();
+    checkIfSuperficieChanged();
+    calcTotals(); markDirty();
+    // Auto-calc on first entry if no previous calc
+    const val = parseFloat($('superficie').value);
+    if (val > 0 && state.lastAutoCalcSuperficie === null) {
+      autoCalcQuantities(val, true);
+    }
   });
 
-  // Work type tabs
-  $$('#workTypeTabs .tab-btn').forEach(btn => {
-    btn.addEventListener('click', () => setWorkType(btn.dataset.type));
+  $('roofPitch').addEventListener('change', () => {
+    updatePitchBadge();
+    const val = parseFloat($('superficie').value);
+    if (val > 0) autoCalcQuantities(val, true);
+    calcTotals(); markDirty();
   });
 
-  // Add rows
-  $('btnAddMaterial').addEventListener('click', addMaterialRow);
-  $('btnAddLabor').addEventListener('click', addLaborRow);
+  $('btnAddMaterial').addEventListener('click', () => {
+    state.materials.push({ id: uid(), desc: '', qty: 1, unit: 'un.', price: 0 });
+    renderMaterials(); markDirty();
+  });
 
-  // Discount
+  $('btnAddLabor').addEventListener('click', () => {
+    state.labor.push({ id: uid(), desc: '', qty: 1, unit: 'for', price: 0 });
+    renderLabor(); markDirty();
+  });
+
+  $('btnRecalc').addEventListener('click', () => {
+    const val = parseFloat($('superficie').value);
+    if (val > 0) { autoCalcQuantities(val, true); calcTotals(); markDirty(); }
+    else alert('Entrez une superficie d\'abord.');
+  });
+
+  // Map buttons
+  $('btnDrawPolygon').addEventListener('click', toggleDraw);
+  $('btnClearPolygon').addEventListener('click', clearPolygon);
+  $('btnApplyArea').addEventListener('click', applyMapArea);
+  $('btnLocateAddress').addEventListener('click', locateAddress);
+
   $('discountType').addEventListener('change', () => {
     const v = $('discountType').value;
     $('discountValueField').style.display = v === 'none' ? 'none' : '';
     $('discountReasonField').style.display = v === 'none' ? 'none' : '';
-    if (v === 'percent') $('discountValueLabel').textContent = 'Pourcentage (%)';
-    else $('discountValueLabel').textContent = 'Montant ($)';
+    $('discountValueLabel').textContent = v === 'percent' ? 'Pourcentage (%)' : 'Montant ($)';
     calcTotals(); markDirty();
   });
   $('discountValue').addEventListener('input', () => { calcTotals(); markDirty(); });
   $('discountReason').addEventListener('input', () => { calcTotals(); markDirty(); });
 
-  // Manufacturer
-  $('manufacturer').addEventListener('change', () => { updateManufacturerWarranty(); markDirty(); });
-
-  // Other fields
-  ['superficie','startDate','duration','clientName','clientPhone','clientEmail','clientAddress',
-   'laborWarranty','paymentMode','quoteValidity','notes'].forEach(id => {
-    $(id).addEventListener('input', () => markDirty());
+  $('manufacturer').addEventListener('change', () => {
+    const m = $('manufacturer').value;
+    $('manufacturerWarranty').value = m ? (MANUFACTURER_WARRANTIES[m]||'') : '';
+    markDirty();
   });
 
-  // Exclusions add
+  ['startDate','duration','clientName','clientPhone','clientEmail','clientAddress',
+   'laborWarranty','paymentMode','quoteValidity','notes'].forEach(id =>
+    $(id).addEventListener('input', () => markDirty())
+  );
+
   $('btnAddExclusion').addEventListener('click', addCustomExclusion);
   $('customExclusionInput').addEventListener('keydown', e => {
     if (e.key === 'Enter') { e.preventDefault(); addCustomExclusion(); }
   });
 
-  // New quote
-  $('btnNewQuote').addEventListener('click', () => {
-    showModal(
-      'Nouvelle soumission',
-      'Créer une nouvelle soumission ? Les informations du formulaire actuel seront effacées (mais les infos de votre entreprise seront conservées).',
-      () => {
-        incrementQuoteNumber();
-        resetQuote();
-        setWorkType('remplacement', true);
-        setStatus('saved');
-      }
-    );
-  });
+  $('btnNewQuote').addEventListener('click', () => showModal(
+    'Nouvelle soumission',
+    "Créer une nouvelle soumission ? Les infos du formulaire seront effacées (les infos de l'entreprise sont conservées).",
+    () => { incrementQuoteNumber(); resetQuote(); setWorkType('remplacement', true); setStatus('saved'); }
+  ));
 
-  // Clear all
-  $('btnClearAll').addEventListener('click', () => {
-    showModal(
-      'Effacer tout',
-      'Effacer toutes les données, y compris les informations de l\'entreprise et réinitialiser le compteur de soumissions ?',
-      () => {
-        localStorage.clear();
-        location.reload();
-      }
-    );
-  });
+  $('btnClearAll').addEventListener('click', () => showModal(
+    'Effacer tout',
+    "Effacer toutes les données y compris les infos de l'entreprise et le compteur ?",
+    () => { localStorage.clear(); location.reload(); }
+  ));
 
-  // PDF
   $('btnDownloadPDF').addEventListener('click', generatePDF);
-
-  // Modal
-  $('modalCancel').addEventListener('click', () => closeModal());
-  $('modalOverlay').addEventListener('click', e => {
-    if (e.target === $('modalOverlay')) closeModal();
-  });
+  $('modalCancel').addEventListener('click', closeModal);
+  $('modalOverlay').addEventListener('click', e => { if (e.target === $('modalOverlay')) closeModal(); });
 }
 
-/* ─── Auto-save ──────────────────────────────────────────────── */
-function setupAutoSave() {
-  const fields = document.querySelectorAll('input, select, textarea');
-  fields.forEach(f => {
-    f.addEventListener('input', () => markDirty());
-    f.addEventListener('change', () => markDirty());
-  });
-}
-
+/* ─── Auto-save ─── */
 function markDirty() {
-  dirtyFlag = true;
   setStatus('unsaved');
   clearTimeout(saveTimer);
-  saveTimer = setTimeout(() => {
-    saveQuoteToStorage();
-    setStatus('saved');
-    dirtyFlag = false;
-  }, 1500);
+  saveTimer = setTimeout(() => { saveQuoteToStorage(); setStatus('saved'); }, 1500);
 }
 
 function setStatus(s) {
@@ -1513,47 +1236,37 @@ function setStatus(s) {
   $('statusText').textContent = s === 'saved' ? 'Sauvegardé automatiquement' : 'Modifications non sauvegardées…';
 }
 
-/* ─── Storage ────────────────────────────────────────────────── */
+/* ─── Storage ─── */
 function saveQuoteToStorage() {
-  const snapshot = {
+  localStorage.setItem('rtp_quote', JSON.stringify({
     quoteNumber: state.quoteNumber,
     workType: state.workType,
     materials: state.materials,
     labor: state.labor,
     exclusions: state.exclusions,
     customExclusions: state.customExclusions,
+    lastAutoCalcSuperficie: state.lastAutoCalcSuperficie,
     fields: {
-      clientName: $('clientName').value,
-      clientPhone: $('clientPhone').value,
-      clientEmail: $('clientEmail').value,
-      clientAddress: $('clientAddress').value,
-      superficie: $('superficie').value,
-      startDate: $('startDate').value,
-      duration: $('duration').value,
-      discountType: $('discountType').value,
-      discountValue: $('discountValue').value,
-      discountReason: $('discountReason').value,
-      laborWarranty: $('laborWarranty').value,
-      manufacturer: $('manufacturer').value,
-      manufacturerWarranty: $('manufacturerWarranty').value,
-      paymentMode: $('paymentMode').value,
-      quoteValidity: $('quoteValidity').value,
+      clientName: $('clientName').value, clientPhone: $('clientPhone').value,
+      clientEmail: $('clientEmail').value, clientAddress: $('clientAddress').value,
+      superficie: $('superficie').value, roofPitch: $('roofPitch').value,
+      startDate: $('startDate').value, duration: $('duration').value,
+      discountType: $('discountType').value, discountValue: $('discountValue').value,
+      discountReason: $('discountReason').value, laborWarranty: $('laborWarranty').value,
+      manufacturer: $('manufacturer').value, manufacturerWarranty: $('manufacturerWarranty').value,
+      paymentMode: $('paymentMode').value, quoteValidity: $('quoteValidity').value,
       notes: $('notes').value,
     }
-  };
-  localStorage.setItem('rtp_quote', JSON.stringify(snapshot));
+  }));
 }
 
 function loadQuoteFromStorage() {
   const raw = localStorage.getItem('rtp_quote');
   if (!raw) {
-    // Fresh start — load defaults
     state.materials = DEFAULT_MATERIALS.remplacement.map(m => ({ ...m, id: uid() }));
     state.labor = DEFAULT_LABOR.remplacement.map(l => ({ ...l, id: uid() }));
     state.exclusions = DEFAULT_EXCLUSIONS.remplacement.map(e => ({ text: e, checked: true, custom: false, id: uid() }));
-    renderMaterials();
-    renderLabor();
-    renderExclusions();
+    renderMaterials(); renderLabor(); renderExclusions();
     return;
   }
   try {
@@ -1568,483 +1281,241 @@ function loadQuoteFromStorage() {
     state.labor = snap.labor || [];
     state.exclusions = snap.exclusions || [];
     state.customExclusions = snap.customExclusions || [];
+    state.lastAutoCalcSuperficie = snap.lastAutoCalcSuperficie || null;
 
-    $$('#workTypeTabs .tab-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.type === state.workType);
-    });
+    $$('#workTypeTabs .tab-btn').forEach(btn =>
+      btn.classList.toggle('active', btn.dataset.type === state.workType)
+    );
 
     const f = snap.fields || {};
-    $('clientName').value    = f.clientName || '';
-    $('clientPhone').value   = f.clientPhone || '';
-    $('clientEmail').value   = f.clientEmail || '';
-    $('clientAddress').value = f.clientAddress || '';
-    $('superficie').value    = f.superficie || '';
-    $('startDate').value     = f.startDate || '';
-    $('duration').value      = f.duration || '';
-    $('discountType').value  = f.discountType || 'none';
-    $('discountValue').value = f.discountValue || '';
-    $('discountReason').value = f.discountReason || '';
-    $('laborWarranty').value = f.laborWarranty || '5 ans';
-    $('manufacturer').value  = f.manufacturer || '';
-    $('manufacturerWarranty').value = f.manufacturerWarranty || '';
-    $('paymentMode').value   = f.paymentMode || '';
-    $('quoteValidity').value = f.quoteValidity || '30 jours';
-    $('notes').value         = f.notes || '';
+    $('clientName').value = f.clientName||''; $('clientPhone').value = f.clientPhone||'';
+    $('clientEmail').value = f.clientEmail||''; $('clientAddress').value = f.clientAddress||'';
+    $('superficie').value = f.superficie||''; $('roofPitch').value = f.roofPitch||'1.118';
+    $('startDate').value = f.startDate||''; $('duration').value = f.duration||'';
+    $('discountType').value = f.discountType||'none'; $('discountValue').value = f.discountValue||'';
+    $('discountReason').value = f.discountReason||''; $('laborWarranty').value = f.laborWarranty||'5 ans';
+    $('manufacturer').value = f.manufacturer||''; $('manufacturerWarranty').value = f.manufacturerWarranty||'';
+    $('paymentMode').value = f.paymentMode||$('paymentMode').options[0].value;
+    $('quoteValidity').value = f.quoteValidity||'30 jours'; $('notes').value = f.notes||'';
 
-    // Restore discount visibility
     const dtype = $('discountType').value;
-    $('discountValueField').style.display = dtype === 'none' ? 'none' : '';
-    $('discountReasonField').style.display = dtype === 'none' ? 'none' : '';
-    if (dtype === 'percent') $('discountValueLabel').textContent = 'Pourcentage (%)';
-    else if (dtype === 'fixed') $('discountValueLabel').textContent = 'Montant ($)';
+    $('discountValueField').style.display = dtype==='none'?'none':'';
+    $('discountReasonField').style.display = dtype==='none'?'none':'';
+    if (dtype==='percent') $('discountValueLabel').textContent = 'Pourcentage (%)';
+    else if (dtype==='fixed') $('discountValueLabel').textContent = 'Montant ($)';
 
-    renderMaterials();
-    renderLabor();
-    renderExclusions();
-    calcTotals();
-  } catch(e) {
-    console.warn('Could not restore quote:', e);
-  }
+    updatePitchBadge();
+    renderMaterials(); renderLabor(); renderExclusions(); calcTotals();
+
+    if (state.lastAutoCalcSuperficie !== null) {
+      $('autocalcBanner').classList.remove('hidden');
+      const pitch = parseFloat($('roofPitch').value)||1.118;
+      const adj = Math.round(state.lastAutoCalcSuperficie * pitch);
+      $('autocalcMsg').textContent = `✦ Quantités calculées — superficie corrigée : ${adj.toLocaleString('fr-CA')} pi²`;
+    }
+  } catch(e) { console.warn('Restore error:', e); }
 }
 
 function resetQuote() {
-  state.materials = [];
-  state.labor = [];
-  state.exclusions = [];
-  state.customExclusions = [];
-  ['clientName','clientPhone','clientEmail','clientAddress',
-   'superficie','startDate','duration','discountValue','discountReason','notes'].forEach(id => {
-    $(id).value = '';
-  });
+  state.materials = []; state.labor = []; state.exclusions = []; state.customExclusions = [];
+  state.lastAutoCalcSuperficie = null;
+  ['clientName','clientPhone','clientEmail','clientAddress','superficie','startDate','duration',
+   'discountValue','discountReason','notes'].forEach(id => $(id).value = '');
   $('discountType').value = 'none';
   $('discountValueField').style.display = 'none';
   $('discountReasonField').style.display = 'none';
+  $('roofPitch').value = '1.118';
   $('laborWarranty').value = '5 ans';
-  $('manufacturer').value = '';
-  $('manufacturerWarranty').value = '';
+  $('manufacturer').value = ''; $('manufacturerWarranty').value = '';
   $('paymentMode').value = $('paymentMode').options[0].value;
   $('quoteValidity').value = '30 jours';
+  $('autocalcBanner').classList.add('hidden');
+  $('superficieAdjusted').textContent = '';
+  updatePitchBadge();
   saveQuoteToStorage();
 }
 
-/* ─── Modal ──────────────────────────────────────────────────── */
+/* ─── Modal ─── */
 let modalCallback = null;
-function showModal(title, msg, onConfirm) {
+function showModal(title, msg, cb) {
   $('modalTitle').textContent = title;
   $('modalMessage').textContent = msg;
-  modalCallback = onConfirm;
+  modalCallback = cb;
   $('modalOverlay').classList.add('open');
   $('modalConfirm').onclick = () => { closeModal(); if (modalCallback) modalCallback(); };
 }
 function closeModal() { $('modalOverlay').classList.remove('open'); }
 
-/* ─── PDF Generation ─────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════
+   PDF GENERATION
+═══════════════════════════════════════════════════════ */
 function generatePDF() {
   const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({ unit: 'mm', format: 'letter', putOnlyUsedFonts: true });
+  const doc = new jsPDF({ unit:'mm', format:'letter' });
+  const PW=216, PH=279, M=15, CW=PW-2*M;
+  let y = M;
 
-  const PAGE_W = 216;
-  const PAGE_H = 279;
-  const MARGIN = 15;
-  const CONTENT_W = PAGE_W - 2 * MARGIN;
-  let y = MARGIN;
+  const coName  = $('companyName').value||'Votre Entreprise';
+  const coPhone = $('companyPhone').value, coEmail = $('companyEmail').value, coRBQ = $('companyRBQ').value;
+  const clName  = $('clientName').value||'—', clPhone = $('clientPhone').value;
+  const clEmail = $('clientEmail').value, clAddr = $('clientAddress').value;
+  const supRaw  = $('superficie').value;
+  const pitch   = parseFloat($('roofPitch').value)||1.118;
+  const supAdj  = supRaw ? Math.round(parseFloat(supRaw)*pitch) : null;
+  const pitchLabel = $('roofPitch').options[$('roofPitch').selectedIndex].text.split('—')[0].trim();
+  const startD  = $('startDate').value, dur = $('duration').value;
+  const labWar  = $('laborWarranty').value, mfr = $('manufacturer').value;
+  const mfrWar  = $('manufacturerWarranty').value, pay = $('paymentMode').value;
+  const valid   = $('quoteValidity').value, notesV = $('notes').value;
+  const today   = new Date().toLocaleDateString('fr-CA');
 
-  // Collect values
-  const coName   = $('companyName').value || 'Votre Entreprise';
-  const coPhone  = $('companyPhone').value;
-  const coEmail  = $('companyEmail').value;
-  const coRBQ    = $('companyRBQ').value;
-  const clName   = $('clientName').value || '—';
-  const clPhone  = $('clientPhone').value;
-  const clEmail  = $('clientEmail').value;
-  const clAddr   = $('clientAddress').value;
-  const supf     = $('superficie').value;
-  const startD   = $('startDate').value;
-  const dur      = $('duration').value;
-  const labWar   = $('laborWarranty').value;
-  const mfr      = $('manufacturer').value;
-  const mfrWar   = $('manufacturerWarranty').value;
-  const pay      = $('paymentMode').value;
-  const valid    = $('quoteValidity').value;
-  const notesV   = $('notes').value;
-  const today    = new Date().toLocaleDateString('fr-CA');
+  // Header
+  doc.setFillColor(26,61,110); doc.rect(0,0,PW,38,'F');
+  doc.setDrawColor(255,255,255); doc.setLineWidth(.4);
+  doc.roundedRect(M,6,26,26,2,2,'S');
+  doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor(255,255,255);
+  doc.text('LOGO',M+13,22,{align:'center'});
+  doc.setFont('helvetica','bold'); doc.setFontSize(16); doc.setTextColor(255,255,255);
+  doc.text(coName,M+32,16);
+  doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(180,200,230);
+  const coLine = [coPhone,coEmail,coRBQ?`RBQ: ${coRBQ}`:null].filter(Boolean).join('  |  ');
+  doc.text(coLine,M+32,23);
+  doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(255,255,255);
+  doc.text(`N° ${state.quoteNumber}`,PW-M,14,{align:'right'});
+  doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(180,200,230);
+  doc.text(`Date : ${today}`,PW-M,20,{align:'right'});
+  doc.text(`Valide : ${valid}`,PW-M,26,{align:'right'});
+  y=44;
 
-  // ── Header band
-  doc.setFillColor(26, 61, 110);
-  doc.rect(0, 0, PAGE_W, 38, 'F');
+  // Work type band
+  doc.setFillColor(37,99,235); doc.rect(M,y,CW,8,'F');
+  doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(255,255,255);
+  doc.text(`TYPE DE TRAVAUX : ${WORK_TYPES[state.workType].toUpperCase()}`,M+4,y+5.5);
+  if (supRaw) {
+    const supText = supAdj ? `${parseInt(supRaw).toLocaleString('fr-CA')} pi² brut → ${supAdj.toLocaleString('fr-CA')} pi² corrigé (${pitchLabel})` : `${parseInt(supRaw).toLocaleString('fr-CA')} pi²`;
+    doc.text(supText,PW-M-4,y+5.5,{align:'right'});
+  }
+  y+=12;
 
-  // Logo placeholder
-  doc.setDrawColor(255,255,255);
-  doc.setLineWidth(.4);
-  doc.roundedRect(MARGIN, 6, 26, 26, 2, 2, 'S');
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(7);
-  doc.setTextColor(255,255,255);
-  doc.text('LOGO', MARGIN + 13, 22, { align: 'center' });
-
-  // Company name
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(16);
-  doc.setTextColor(255, 255, 255);
-  doc.text(coName, MARGIN + 32, 16);
-
-  // Company details
-  doc.setFont('helvetica', 'normal');
+  // Client info
+  doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(26,61,110);
+  doc.text('INFORMATIONS DU CLIENT',M,y); y+=4;
+  doc.setDrawColor(200,210,225); doc.setLineWidth(.3); doc.line(M,y,PW-M,y); y+=5;
+  const clientInfo=[['Client',clName],...(clPhone?[['Téléphone',clPhone]]:[]),...(clEmail?[['Courriel',clEmail]]:[]),...(clAddr?[['Adresse des travaux',clAddr]]:[]),...(startD?[['Date de début',new Date(startD+'T12:00').toLocaleDateString('fr-CA')]]:[]),(dur?[['Durée estimée',dur]]:[])].filter(x=>x.length);
   doc.setFontSize(8);
-  doc.setTextColor(180, 200, 230);
-  let coLine = [coPhone, coEmail, coRBQ ? `RBQ: ${coRBQ}` : null].filter(Boolean).join('  |  ');
-  doc.text(coLine, MARGIN + 32, 23);
+  const half=Math.ceil(clientInfo.length/2);
+  clientInfo.slice(0,half).forEach((p,i)=>{doc.setFont('helvetica','bold');doc.setTextColor(100,110,130);doc.text(p[0]+' :',M,y+i*5.5);doc.setFont('helvetica','normal');doc.setTextColor(30,30,30);doc.text(p[1],M+40,y+i*5.5,{maxWidth:55});});
+  clientInfo.slice(half).forEach((p,i)=>{doc.setFont('helvetica','bold');doc.setTextColor(100,110,130);doc.text(p[0]+' :',M+CW/2+5,y+i*5.5);doc.setFont('helvetica','normal');doc.setTextColor(30,30,30);doc.text(p[1],M+CW/2+45,y+i*5.5,{maxWidth:55});});
+  y+=half*5.5+6;
 
-  // Quote number
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(9);
-  doc.setTextColor(255,255,255);
-  doc.text(`N° ${state.quoteNumber}`, PAGE_W - MARGIN, 14, { align: 'right' });
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(8);
-  doc.setTextColor(180,200,230);
-  doc.text(`Date : ${today}`, PAGE_W - MARGIN, 20, { align: 'right' });
-  doc.text(`Valide : ${valid}`, PAGE_W - MARGIN, 26, { align: 'right' });
+  y=pdfTable(doc,y,M,CW,PH,'MATÉRIAUX',state.materials,'Sous-total matériaux');
+  y=pdfTable(doc,y,M,CW,PH,"MAIN-D'ŒUVRE",state.labor,"Sous-total main-d'œuvre");
 
-  y = 44;
-
-  // ── Work type band
-  doc.setFillColor(37, 99, 235);
-  doc.rect(MARGIN, y, CONTENT_W, 8, 'F');
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(9);
-  doc.setTextColor(255,255,255);
-  doc.text(`TYPE DE TRAVAUX : ${WORK_TYPES[state.workType].toUpperCase()}`, MARGIN + 4, y + 5.5);
-  if (supf) doc.text(`Superficie : ${supf} pi²`, PAGE_W - MARGIN - 4, y + 5.5, { align: 'right' });
-  y += 12;
-
-  // ── Client & project info
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(9);
-  doc.setTextColor(26, 61, 110);
-  doc.text('INFORMATIONS DU CLIENT', MARGIN, y);
-  y += 4;
-  doc.setDrawColor(200, 210, 225);
-  doc.setLineWidth(.3);
-  doc.line(MARGIN, y, PAGE_W - MARGIN, y);
-  y += 5;
-
-  const clientInfo = [
-    ['Client', clName],
-    ...(clPhone ? [['Téléphone', clPhone]] : []),
-    ...(clEmail ? [['Courriel', clEmail]] : []),
-    ...(clAddr  ? [['Adresse des travaux', clAddr]] : []),
-    ...(startD  ? [['Date de début', new Date(startD).toLocaleDateString('fr-CA')]] : []),
-    ...(dur     ? [['Durée estimée', dur]] : []),
-  ];
-  doc.setFontSize(8);
-  const half = Math.ceil(clientInfo.length / 2);
-  clientInfo.slice(0, half).forEach((pair, i) => {
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(100, 110, 130);
-    doc.text(pair[0] + ' :', MARGIN, y + i * 5.5);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(30, 30, 30);
-    doc.text(pair[1], MARGIN + 40, y + i * 5.5);
+  // Totals
+  const matSub=state.materials.reduce((s,r)=>s+r.qty*r.price,0);
+  const labSub=state.labor.reduce((s,r)=>s+r.qty*r.price,0);
+  const beforeTax=matSub+labSub;
+  const dtype=$('discountType').value;
+  let discAmt=0;
+  if(dtype!=='none'){const dv=parseFloat($('discountValue').value)||0;discAmt=dtype==='percent'?beforeTax*dv/100:dv;discAmt=Math.min(discAmt,beforeTax);}
+  const taxable=beforeTax-discAmt,tps=taxable*TPS_RATE,tvq=taxable*TVQ_RATE,grand=taxable+tps+tvq;
+  const tRows=[['Sous-total matériaux',matSub,false,false],['Sous-total main-d\'œuvre',labSub,false,false],['Sous-total avant taxes',beforeTax,true,false],...(discAmt>0?[[`Escompte${$('discountReason').value?' — '+$('discountReason').value:''}`, -discAmt,false,false],['Sous-total après escompte',taxable,true,false]]:[]),['TPS (5 %)',tps,false,false],['TVQ (9,975 %)',tvq,false,false],['TOTAL TTC',grand,false,true]];
+  if(y+tRows.length*7+8>PH-20){doc.addPage();y=M;}
+  doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(26,61,110);doc.text('RÉSUMÉ DES COÛTS',M,y);y+=4;
+  doc.setLineWidth(.3);doc.setDrawColor(200,210,225);doc.line(M,y,PW-M,y);y+=4;
+  const tx=PW-M-80;
+  tRows.forEach(([label,val,bold,isgrand])=>{
+    if(isgrand){doc.setFillColor(26,61,110);doc.rect(tx-4,y-4,84,10,'F');doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(255,255,255);}
+    else if(bold){doc.setFont('helvetica','bold');doc.setFontSize(8.5);doc.setTextColor(26,61,110);}
+    else{doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(val<0?180:60,val<0?40:60,val<0?40:60);}
+    doc.text(label,tx,y+(isgrand?2:0));
+    doc.text((val<0?'-':'')+formatCAD(Math.abs(val)),PW-M,y+(isgrand?2:0),{align:'right'});
+    y+=isgrand?10:6.5;
   });
-  clientInfo.slice(half).forEach((pair, i) => {
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(100, 110, 130);
-    doc.text(pair[0] + ' :', MARGIN + CONTENT_W / 2 + 5, y + i * 5.5);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(30, 30, 30);
-    doc.text(pair[1], MARGIN + CONTENT_W / 2 + 45, y + i * 5.5, { maxWidth: 55 });
-  });
-  y += Math.ceil(clientInfo.length / 2) * 5.5 + 6;
+  y+=6;
 
-  // ── Materials table
-  y = pdfTable(doc, y, MARGIN, CONTENT_W, PAGE_H,
-    'MATÉRIAUX',
-    state.materials,
-    'Sous-total matériaux'
-  );
+  // Warranty cards
+  if(y+28>PH-20){doc.addPage();y=M;}
+  doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(26,61,110);doc.text('GARANTIES',M,y);y+=4;
+  doc.setDrawColor(200,210,225);doc.line(M,y,PW-M,y);y+=5;
+  const cw=(CW-8)/2;
+  doc.setFillColor(239,246,255);doc.roundedRect(M,y,cw,22,2,2,'F');doc.setFillColor(37,99,235);doc.roundedRect(M,y,cw,7,2,2,'F');doc.rect(M,y+4,cw,3,'F');
+  doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(255,255,255);doc.text('GARANTIE MAIN-D\'OEUVRE',M+3,y+5);
+  doc.setFont('helvetica','bold');doc.setFontSize(12);doc.setTextColor(26,61,110);doc.text(labWar,M+cw/2,y+16,{align:'center'});
+  const c2x=M+cw+8;
+  doc.setFillColor(240,253,244);doc.roundedRect(c2x,y,cw,22,2,2,'F');doc.setFillColor(22,163,74);doc.roundedRect(c2x,y,cw,7,2,2,'F');doc.rect(c2x,y+4,cw,3,'F');
+  doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(255,255,255);doc.text(`GARANTIE FABRICANT${mfr?' — '+mfr:''}`,c2x+3,y+5);
+  doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(22,163,74);doc.text(mfrWar||(mfr?'Voir documentation fabricant':'Non spécifié'),c2x+cw/2,y+16,{align:'center',maxWidth:cw-6});
+  y+=28;
+  doc.setFontSize(8);doc.setFont('helvetica','bold');doc.setTextColor(100,110,130);doc.text('MODE DE PAIEMENT :',M,y);doc.setFont('helvetica','normal');doc.setTextColor(30,30,30);doc.text(pay,M+46,y);y+=8;
 
-  // ── Labor table
-  y = pdfTable(doc, y, MARGIN, CONTENT_W, PAGE_H,
-    'MAIN-D\'ŒUVRE',
-    state.labor,
-    'Sous-total main-d\'œuvre'
-  );
-
-  // ── Totals
-  y += 2;
-  const matSub = state.materials.reduce((s, r) => s + r.qty * r.price, 0);
-  const labSub = state.labor.reduce((s, r) => s + r.qty * r.price, 0);
-  const beforeTax = matSub + labSub;
-  const dtype = $('discountType').value;
-  let discAmt = 0;
-  if (dtype !== 'none') {
-    const dv = parseFloat($('discountValue').value) || 0;
-    discAmt = dtype === 'percent' ? beforeTax * (dv / 100) : dv;
-    discAmt = Math.min(discAmt, beforeTax);
-  }
-  const taxable = beforeTax - discAmt;
-  const tps = taxable * TPS_RATE;
-  const tvq = taxable * TVQ_RATE;
-  const grand = taxable + tps + tvq;
-
-  const totalsRows = [
-    ['Sous-total matériaux', matSub, false, false],
-    ['Sous-total main-d\'œuvre', labSub, false, false],
-    ['Sous-total avant taxes', beforeTax, true, false],
-    ...(discAmt > 0 ? [[`Escompte${$('discountReason').value ? ' — ' + $('discountReason').value : ''}`, -discAmt, false, false]] : []),
-    ...(discAmt > 0 ? [['Sous-total après escompte', taxable, true, false]] : []),
-    ['TPS (5 %)', tps, false, false],
-    ['TVQ (9,975 %)', tvq, false, false],
-    ['TOTAL TTC', grand, false, true],
-  ];
-
-  // Totals box
-  if (y + totalsRows.length * 7 + 8 > PAGE_H - 20) {
-    doc.addPage(); y = MARGIN;
+  // Exclusions
+  const exclList=[...state.exclusions.filter(e=>e.checked),...state.customExclusions.filter(e=>e.checked)];
+  if(exclList.length>0){
+    if(y+20>PH-30){doc.addPage();y=M;}
+    doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(26,61,110);doc.text('EXCLUSIONS (non inclus dans la soumission)',M,y);y+=4;
+    doc.setDrawColor(200,210,225);doc.line(M,y,PW-M,y);y+=5;
+    doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(60,60,60);
+    exclList.forEach(e=>{if(y>PH-30){doc.addPage();y=M;}doc.text('•  '+e.text,M+2,y,{maxWidth:CW-4});y+=5.5;});
+    y+=4;
   }
 
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(9);
-  doc.setTextColor(26, 61, 110);
-  doc.text('RÉSUMÉ DES COÛTS', MARGIN, y);
-  y += 4;
-  doc.setLineWidth(.3);
-  doc.setDrawColor(200,210,225);
-  doc.line(MARGIN, y, PAGE_W - MARGIN, y);
-  y += 4;
-
-  const totalsX = PAGE_W - MARGIN - 80;
-  totalsRows.forEach(([label, val, bold, grand]) => {
-    if (grand) {
-      doc.setFillColor(26, 61, 110);
-      doc.rect(totalsX - 4, y - 4, 80 + 4, 10, 'F');
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(10);
-      doc.setTextColor(255, 255, 255);
-    } else if (bold) {
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(8.5);
-      doc.setTextColor(26, 61, 110);
-    } else {
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(8);
-      doc.setTextColor(val < 0 ? 180 : 60, val < 0 ? 40 : 60, val < 0 ? 40 : 60);
-    }
-    doc.text(label, totalsX, y + (grand ? 2 : 0));
-    const formatted = (val < 0 ? '-' : '') + formatCAD(Math.abs(val));
-    doc.text(formatted, PAGE_W - MARGIN, y + (grand ? 2 : 0), { align: 'right' });
-    y += grand ? 10 : 6.5;
-  });
-
-  y += 6;
-
-  // ── Warranty cards
-  if (y + 28 > PAGE_H - 20) { doc.addPage(); y = MARGIN; }
-
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(9);
-  doc.setTextColor(26, 61, 110);
-  doc.text('GARANTIES', MARGIN, y);
-  y += 4;
-  doc.setDrawColor(200,210,225);
-  doc.line(MARGIN, y, PAGE_W - MARGIN, y);
-  y += 5;
-
-  const cardW = (CONTENT_W - 8) / 2;
-  // Card 1 — Labour
-  doc.setFillColor(239, 246, 255);
-  doc.roundedRect(MARGIN, y, cardW, 22, 2, 2, 'F');
-  doc.setFillColor(37, 99, 235);
-  doc.roundedRect(MARGIN, y, cardW, 7, 2, 2, 'F');
-  doc.rect(MARGIN, y + 4, cardW, 3, 'F');
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(8);
-  doc.setTextColor(255,255,255);
-  doc.text('🛡  GARANTIE MAIN-D\'ŒUVRE', MARGIN + 3, y + 5);
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(12);
-  doc.setTextColor(26, 61, 110);
-  doc.text(labWar, MARGIN + cardW / 2, y + 16, { align: 'center' });
-
-  // Card 2 — Fabricant
-  const c2x = MARGIN + cardW + 8;
-  doc.setFillColor(240, 253, 244);
-  doc.roundedRect(c2x, y, cardW, 22, 2, 2, 'F');
-  doc.setFillColor(22, 163, 74);
-  doc.roundedRect(c2x, y, cardW, 7, 2, 2, 'F');
-  doc.rect(c2x, y + 4, cardW, 3, 'F');
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(8);
-  doc.setTextColor(255,255,255);
-  doc.text(`🏭  GARANTIE FABRICANT${mfr ? ' — ' + mfr : ''}`, c2x + 3, y + 5);
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(8);
-  doc.setTextColor(22, 163, 74);
-  doc.text(mfrWar || (mfr ? 'Voir documentation fabricant' : 'Non spécifié'), c2x + cardW / 2, y + 16, { align: 'center', maxWidth: cardW - 6 });
-  y += 28;
-
-  // Payment
-  doc.setFontSize(8);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(100, 110, 130);
-  doc.text('MODE DE PAIEMENT :', MARGIN, y);
-  doc.setFont('helvetica', 'normal');
-  doc.setTextColor(30, 30, 30);
-  doc.text(pay, MARGIN + 46, y);
-  y += 8;
-
-  // ── Exclusions
-  const checkedExcl = [
-    ...state.exclusions.filter(e => e.checked),
-    ...state.customExclusions.filter(e => e.checked),
-  ];
-  if (checkedExcl.length > 0) {
-    if (y + 20 > PAGE_H - 30) { doc.addPage(); y = MARGIN; }
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(9);
-    doc.setTextColor(26, 61, 110);
-    doc.text('EXCLUSIONS (non inclus dans la soumission)', MARGIN, y);
-    y += 4;
-    doc.setLineWidth(.3);
-    doc.setDrawColor(200,210,225);
-    doc.line(MARGIN, y, PAGE_W - MARGIN, y);
-    y += 5;
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(8);
-    doc.setTextColor(60, 60, 60);
-    checkedExcl.forEach(e => {
-      if (y > PAGE_H - 30) { doc.addPage(); y = MARGIN; }
-      doc.text('•  ' + e.text, MARGIN + 2, y, { maxWidth: CONTENT_W - 4 });
-      y += 5.5;
-    });
-    y += 4;
+  // Notes
+  if(notesV){
+    if(y+20>PH-30){doc.addPage();y=M;}
+    doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(26,61,110);doc.text('NOTES SUPPLÉMENTAIRES',M,y);y+=4;
+    doc.setDrawColor(200,210,225);doc.line(M,y,PW-M,y);y+=5;
+    doc.setFont('helvetica','italic');doc.setFontSize(8);doc.setTextColor(80,80,80);
+    const sn=doc.splitTextToSize(notesV,CW-4);doc.text(sn,M,y);y+=sn.length*5+6;
   }
 
-  // ── Notes
-  if (notesV) {
-    if (y + 20 > PAGE_H - 30) { doc.addPage(); y = MARGIN; }
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(9);
-    doc.setTextColor(26, 61, 110);
-    doc.text('NOTES SUPPLÉMENTAIRES', MARGIN, y);
-    y += 4;
-    doc.setDrawColor(200,210,225);
-    doc.line(MARGIN, y, PAGE_W - MARGIN, y);
-    y += 5;
-    doc.setFont('helvetica', 'italic');
-    doc.setFontSize(8);
-    doc.setTextColor(80, 80, 80);
-    const splitNotes = doc.splitTextToSize(notesV, CONTENT_W - 4);
-    doc.text(splitNotes, MARGIN, y);
-    y += splitNotes.length * 5 + 6;
+  // Signatures
+  if(y+40>PH-15){doc.addPage();y=M;}
+  y=PH-50;
+  doc.setDrawColor(180,190,205);doc.setLineWidth(.3);
+  doc.line(M,y,PH-20,y);doc.line(PH+10,y,PW-M,y);
+  doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(100,110,130);
+  doc.text("Signature de l'entrepreneur",M,y+5);doc.text('Signature du client',PH+10,y+5);
+  doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(30,30,30);
+  doc.text(coName,M,y+10);doc.text(clName,PH+10,y+10);
+  doc.text('Date : ___________________',M,y+17);doc.text('Date : ___________________',PH+10,y+17);
+
+  // Footer
+  const totalPages=doc.internal.getNumberOfPages();
+  for(let p=1;p<=totalPages;p++){
+    doc.setPage(p);doc.setFillColor(245,247,250);doc.rect(0,PH-10,PW,10,'F');
+    doc.setFont('helvetica','normal');doc.setFontSize(7);doc.setTextColor(140,150,165);
+    doc.text(`${coName}  |  Soumission N° ${state.quoteNumber}  |  ${today}`,PW/2,PH-4,{align:'center'});
+    doc.text(`Page ${p} / ${totalPages}`,PW-M,PH-4,{align:'right'});
   }
 
-  // ── Signatures
-  if (y + 40 > PAGE_H - 15) { doc.addPage(); y = MARGIN; }
-  y = PAGE_H - 50;
-  doc.setDrawColor(180, 190, 205);
-  doc.setLineWidth(.3);
-  doc.line(MARGIN, y, PAGE_H - 20, y);
-  doc.line(PAGE_H + 10, y, PAGE_W - MARGIN, y);
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(8);
-  doc.setTextColor(100, 110, 130);
-  doc.text('Signature de l\'entrepreneur', MARGIN, y + 5);
-  doc.text('Signature du client', PAGE_H + 10, y + 5);
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(7.5);
-  doc.text(coName, MARGIN, y + 10);
-  doc.text(clName, PAGE_H + 10, y + 10);
-  doc.text('Date : ___________________', MARGIN, y + 17);
-  doc.text('Date : ___________________', PAGE_H + 10, y + 17);
-
-  // ── Footer all pages
-  const totalPages = doc.internal.getNumberOfPages();
-  for (let p = 1; p <= totalPages; p++) {
-    doc.setPage(p);
-    doc.setFillColor(245, 247, 250);
-    doc.rect(0, PAGE_H - 10, PAGE_W, 10, 'F');
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(7);
-    doc.setTextColor(140, 150, 165);
-    doc.text(`${coName}  |  Soumission N° ${state.quoteNumber}  |  ${today}`, PAGE_W / 2, PAGE_H - 4, { align: 'center' });
-    doc.text(`Page ${p} / ${totalPages}`, PAGE_W - MARGIN, PAGE_H - 4, { align: 'right' });
-  }
-
-  doc.save(`Soumission-${state.quoteNumber}-${clName.replace(/\s+/g,'-') || 'client'}.pdf`);
+  doc.save(`Soumission-${state.quoteNumber}-${($('clientName').value||'client').replace(/\s+/g,'-')}.pdf`);
 }
 
-function pdfTable(doc, y, margin, contentW, pageH, title, rows, subtitleLabel) {
-  if (y + 30 > pageH - 20) { doc.addPage(); y = margin; }
-
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(9);
-  doc.setTextColor(26, 61, 110);
-  doc.text(title, margin, y);
-  y += 4;
-  doc.setDrawColor(200, 210, 225);
-  doc.setLineWidth(.3);
-  doc.line(margin, y, margin + contentW, y);
-  y += 3;
-
-  if (rows.length === 0) {
-    doc.setFont('helvetica', 'italic');
-    doc.setFontSize(8);
-    doc.setTextColor(160, 170, 180);
-    doc.text('Aucun élément.', margin + 4, y + 5);
-    return y + 12;
-  }
-
-  const subtotal = rows.reduce((s, r) => s + (r.qty||0) * (r.price||0), 0);
-
+function pdfTable(doc,y,margin,contentW,pageH,title,rows,subLabel){
+  if(y+30>pageH-20){doc.addPage();y=margin;}
+  doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(26,61,110);doc.text(title,margin,y);y+=4;
+  doc.setDrawColor(200,210,225);doc.setLineWidth(.3);doc.line(margin,y,margin+contentW,y);y+=3;
+  if(!rows.length){doc.setFont('helvetica','italic');doc.setFontSize(8);doc.setTextColor(160,170,180);doc.text('Aucun élément.',margin+4,y+5);return y+12;}
+  const sub=rows.reduce((s,r)=>s+(r.qty||0)*(r.price||0),0);
   doc.autoTable({
-    startY: y,
-    margin: { left: margin, right: margin },
-    tableWidth: contentW,
-    head: [[
-      { content: 'Description', styles: { halign: 'left' } },
-      { content: 'Qté', styles: { halign: 'center' } },
-      { content: 'Unité', styles: { halign: 'center' } },
-      { content: 'Prix unit.', styles: { halign: 'right' } },
-      { content: 'Total', styles: { halign: 'right' } },
-    ]],
-    body: rows.filter(r => r.desc || r.qty || r.price).map(r => [
-      r.desc || '—',
-      { content: String(r.qty || 0), styles: { halign: 'center' } },
-      { content: r.unit || '', styles: { halign: 'center' } },
-      { content: formatCAD(r.price || 0), styles: { halign: 'right' } },
-      { content: formatCAD((r.qty||0) * (r.price||0)), styles: { halign: 'right' } },
-    ]),
-    foot: [[
-      { content: subtitleLabel, colSpan: 4, styles: { halign: 'right', fontStyle: 'bold', textColor: [26,61,110] } },
-      { content: formatCAD(subtotal), styles: { halign: 'right', fontStyle: 'bold', textColor: [26,61,110] } },
-    ]],
-    headStyles: {
-      fillColor: [26, 61, 110],
-      textColor: 255,
-      fontSize: 8,
-      fontStyle: 'bold',
-      cellPadding: 3,
-    },
-    bodyStyles: { fontSize: 8, cellPadding: 2.5, textColor: [40, 40, 40] },
-    alternateRowStyles: { fillColor: [247, 249, 252] },
-    footStyles: { fillColor: [235, 240, 250], cellPadding: 3, fontSize: 8.5 },
-    columnStyles: { 0: { cellWidth: 'auto' } },
-    showFoot: 'lastPage',
+    startY:y,margin:{left:margin,right:margin},tableWidth:contentW,
+    head:[[{content:'Description',styles:{halign:'left'}},{content:'Qté',styles:{halign:'center'}},{content:'Unité',styles:{halign:'center'}},{content:'Prix unit.',styles:{halign:'right'}},{content:'Total',styles:{halign:'right'}}]],
+    body:rows.filter(r=>r.desc||r.qty||r.price).map(r=>[r.desc||'—',{content:String(r.qty||0),styles:{halign:'center'}},{content:r.unit||'',styles:{halign:'center'}},{content:formatCAD(r.price||0),styles:{halign:'right'}},{content:formatCAD((r.qty||0)*(r.price||0)),styles:{halign:'right'}}]),
+    foot:[[{content:subLabel,colSpan:4,styles:{halign:'right',fontStyle:'bold',textColor:[26,61,110]}},{content:formatCAD(sub),styles:{halign:'right',fontStyle:'bold',textColor:[26,61,110]}}]],
+    headStyles:{fillColor:[26,61,110],textColor:255,fontSize:8,fontStyle:'bold',cellPadding:3},
+    bodyStyles:{fontSize:8,cellPadding:2.5,textColor:[40,40,40]},
+    alternateRowStyles:{fillColor:[247,249,252]},
+    footStyles:{fillColor:[235,240,250],cellPadding:3,fontSize:8.5},
+    showFoot:'lastPage',
   });
-
-  return doc.lastAutoTable.finalY + 8;
+  return doc.lastAutoTable.finalY+8;
 }
 
-/* ─── Helpers ────────────────────────────────────────────────── */
-function formatCAD(n) {
-  return new Intl.NumberFormat('fr-CA', { style: 'currency', currency: 'CAD' }).format(n || 0);
-}
-
-function uid() {
-  return Math.random().toString(36).slice(2, 10);
-}
+/* ─── Helpers ─── */
+function formatCAD(n){return new Intl.NumberFormat('fr-CA',{style:'currency',currency:'CAD'}).format(n||0);}
+function uid(){return Math.random().toString(36).slice(2,10);}
 </script>
 </body>
 </html>
+HTMLEOF
