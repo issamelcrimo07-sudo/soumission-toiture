@@ -1376,12 +1376,12 @@ function generatePDF() {
   doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor(255,255,255);
   doc.text('LOGO',M+13,22,{align:'center'});
   doc.setFont('helvetica','bold'); doc.setFontSize(16); doc.setTextColor(255,255,255);
-  doc.text(coName,M+32,16);
+  doc.text(pdfSafe(coName),M+32,16);
   doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(180,200,230);
   const coLine = [coPhone,coEmail,coRBQ?`RBQ: ${coRBQ}`:null].filter(Boolean).join('  |  ');
-  doc.text(coLine,M+32,23);
+  doc.text(pdfSafe(coLine),M+32,23);
   doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(255,255,255);
-  doc.text(`N° ${state.quoteNumber}`,PW-M,14,{align:'right'});
+  doc.text(`No ${state.quoteNumber}`,PW-M,14,{align:'right'});
   doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(180,200,230);
   doc.text(`Date : ${today}`,PW-M,20,{align:'right'});
   doc.text(`Valide : ${valid}`,PW-M,26,{align:'right'});
@@ -1390,10 +1390,10 @@ function generatePDF() {
   // Work type band
   doc.setFillColor(37,99,235); doc.rect(M,y,CW,8,'F');
   doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(255,255,255);
-  doc.text(`TYPE DE TRAVAUX : ${WORK_TYPES[state.workType].toUpperCase()}`,M+4,y+5.5);
+  doc.text(pdfSafe(`TYPE DE TRAVAUX : ${WORK_TYPES[state.workType].toUpperCase()}`),M+4,y+5.5);
   if (supRaw) {
-    const supText = supAdj ? `${parseInt(supRaw).toLocaleString('fr-CA')} pi² brut → ${supAdj.toLocaleString('fr-CA')} pi² corrigé (${pitchLabel})` : `${parseInt(supRaw).toLocaleString('fr-CA')} pi²`;
-    doc.text(supText,PW-M-4,y+5.5,{align:'right'});
+    const supText = supAdj ? `${parseInt(supRaw).toLocaleString('fr-CA')} pi2 brut -> ${supAdj.toLocaleString('fr-CA')} pi2 corrige (${pitchLabel})` : `${parseInt(supRaw).toLocaleString('fr-CA')} pi2`;
+    doc.text(pdfSafe(supText),PW-M-4,y+5.5,{align:'right'});
   }
   y+=12;
 
@@ -1401,15 +1401,15 @@ function generatePDF() {
   doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(26,61,110);
   doc.text('INFORMATIONS DU CLIENT',M,y); y+=4;
   doc.setDrawColor(200,210,225); doc.setLineWidth(.3); doc.line(M,y,PW-M,y); y+=5;
-  const clientInfo=[['Client',clName],...(clPhone?[['Téléphone',clPhone]]:[]),...(clEmail?[['Courriel',clEmail]]:[]),...(clAddr?[['Adresse des travaux',clAddr]]:[]),...(startD?[['Date de début',new Date(startD+'T12:00').toLocaleDateString('fr-CA')]]:[]),(dur?[['Durée estimée',dur]]:[])].filter(x=>x.length);
+  const clientInfo=[['Client',clName],...(clPhone?[['Tel.',clPhone]]:[]),...(clEmail?[['Courriel',clEmail]]:[]),...(clAddr?[['Adresse',clAddr]]:[]),...(startD?[['Debut',new Date(startD+'T12:00').toLocaleDateString('fr-CA')]]:[]),(dur?[['Duree',dur]]:[])].filter(x=>x.length);
   doc.setFontSize(8);
   const half=Math.ceil(clientInfo.length/2);
-  clientInfo.slice(0,half).forEach((p,i)=>{doc.setFont('helvetica','bold');doc.setTextColor(100,110,130);doc.text(p[0]+' :',M,y+i*5.5);doc.setFont('helvetica','normal');doc.setTextColor(30,30,30);doc.text(p[1],M+40,y+i*5.5,{maxWidth:55});});
-  clientInfo.slice(half).forEach((p,i)=>{doc.setFont('helvetica','bold');doc.setTextColor(100,110,130);doc.text(p[0]+' :',M+CW/2+5,y+i*5.5);doc.setFont('helvetica','normal');doc.setTextColor(30,30,30);doc.text(p[1],M+CW/2+45,y+i*5.5,{maxWidth:55});});
+  clientInfo.slice(0,half).forEach((p,i)=>{doc.setFont('helvetica','bold');doc.setTextColor(100,110,130);doc.text(pdfSafe(p[0]+' :'),M,y+i*5.5);doc.setFont('helvetica','normal');doc.setTextColor(30,30,30);doc.text(pdfSafe(p[1]),M+40,y+i*5.5,{maxWidth:55});});
+  clientInfo.slice(half).forEach((p,i)=>{doc.setFont('helvetica','bold');doc.setTextColor(100,110,130);doc.text(pdfSafe(p[0]+' :'),M+CW/2+5,y+i*5.5);doc.setFont('helvetica','normal');doc.setTextColor(30,30,30);doc.text(pdfSafe(p[1]),M+CW/2+45,y+i*5.5,{maxWidth:55});});
   y+=half*5.5+6;
 
-  y=pdfTable(doc,y,M,CW,PH,'MATÉRIAUX',state.materials,'Sous-total matériaux');
-  y=pdfTable(doc,y,M,CW,PH,"MAIN-D'ŒUVRE",state.labor,"Sous-total main-d'œuvre");
+  y=pdfTable(doc,y,M,CW,PH,'MATERIAUX',state.materials,'Sous-total materiaux');
+  y=pdfTable(doc,y,M,CW,PH,'MAIN-D OEUVRE',state.labor,'Sous-total main-d oeuvre');
 
   // Totals
   const matSub=state.materials.reduce((s,r)=>s+r.qty*r.price,0);
@@ -1419,9 +1419,9 @@ function generatePDF() {
   let discAmt=0;
   if(dtype!=='none'){const dv=parseFloat($('discountValue').value)||0;discAmt=dtype==='percent'?beforeTax*dv/100:dv;discAmt=Math.min(discAmt,beforeTax);}
   const taxable=beforeTax-discAmt,tps=taxable*TPS_RATE,tvq=taxable*TVQ_RATE,grand=taxable+tps+tvq;
-  const tRows=[['Sous-total matériaux',matSub,false,false],['Sous-total main-d\'œuvre',labSub,false,false],['Sous-total avant taxes',beforeTax,true,false],...(discAmt>0?[[`Escompte${$('discountReason').value?' — '+$('discountReason').value:''}`, -discAmt,false,false],['Sous-total après escompte',taxable,true,false]]:[]),['TPS (5 %)',tps,false,false],['TVQ (9,975 %)',tvq,false,false],['TOTAL TTC',grand,false,true]];
+  const tRows=[['Sous-total materiaux',matSub,false,false],['Sous-total main-d oeuvre',labSub,false,false],['Sous-total avant taxes',beforeTax,true,false],...(discAmt>0?[[`Escompte${$('discountReason').value?' - '+$('discountReason').value:''}`, -discAmt,false,false],['Sous-total apres escompte',taxable,true,false]]:[]),['TPS (5 %)',tps,false,false],['TVQ (9,975 %)',tvq,false,false],['TOTAL',grand,false,true]];
   if(y+tRows.length*7+8>PH-20){doc.addPage();y=M;}
-  doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(26,61,110);doc.text('RÉSUMÉ DES COÛTS',M,y);y+=4;
+  doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(26,61,110);doc.text('RESUME DES COUTS',M,y);y+=4;
   doc.setLineWidth(.3);doc.setDrawColor(200,210,225);doc.line(M,y,PW-M,y);y+=4;
   const tx=PW-M-80;
   tRows.forEach(([label,val,bold,isgrand])=>{
@@ -1444,10 +1444,10 @@ function generatePDF() {
   doc.setFont('helvetica','bold');doc.setFontSize(12);doc.setTextColor(26,61,110);doc.text(labWar,M+cw/2,y+16,{align:'center'});
   const c2x=M+cw+8;
   doc.setFillColor(240,253,244);doc.roundedRect(c2x,y,cw,22,2,2,'F');doc.setFillColor(22,163,74);doc.roundedRect(c2x,y,cw,7,2,2,'F');doc.rect(c2x,y+4,cw,3,'F');
-  doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(255,255,255);doc.text(`GARANTIE FABRICANT${mfr?' — '+mfr:''}`,c2x+3,y+5);
-  doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(22,163,74);doc.text(mfrWar||(mfr?'Voir documentation fabricant':'Non spécifié'),c2x+cw/2,y+16,{align:'center',maxWidth:cw-6});
+  doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(255,255,255);doc.text(pdfSafe(`GARANTIE FABRICANT${mfr?' - '+mfr:''}`),c2x+3,y+5);
+  doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(22,163,74);doc.text(pdfSafe(mfrWar||(mfr?'Voir documentation fabricant':'Non specifie')),c2x+cw/2,y+16,{align:'center',maxWidth:cw-6});
   y+=28;
-  doc.setFontSize(8);doc.setFont('helvetica','bold');doc.setTextColor(100,110,130);doc.text('MODE DE PAIEMENT :',M,y);doc.setFont('helvetica','normal');doc.setTextColor(30,30,30);doc.text(pay,M+46,y);y+=8;
+  doc.setFontSize(8);doc.setFont('helvetica','bold');doc.setTextColor(100,110,130);doc.text('MODE DE PAIEMENT :',M,y);doc.setFont('helvetica','normal');doc.setTextColor(30,30,30);doc.text(pdfSafe(pay),M+46,y);y+=8;
 
   // Exclusions
   const exclList=[...state.exclusions.filter(e=>e.checked),...state.customExclusions.filter(e=>e.checked)];
@@ -1456,17 +1456,17 @@ function generatePDF() {
     doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(26,61,110);doc.text('EXCLUSIONS (non inclus dans la soumission)',M,y);y+=4;
     doc.setDrawColor(200,210,225);doc.line(M,y,PW-M,y);y+=5;
     doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(60,60,60);
-    exclList.forEach(e=>{if(y>PH-30){doc.addPage();y=M;}doc.text('•  '+e.text,M+2,y,{maxWidth:CW-4});y+=5.5;});
+    exclList.forEach(e=>{if(y>PH-30){doc.addPage();y=M;}doc.text('- '+pdfSafe(e.text),M+2,y,{maxWidth:CW-4});y+=5.5;});
     y+=4;
   }
 
   // Notes
   if(notesV){
     if(y+20>PH-30){doc.addPage();y=M;}
-    doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(26,61,110);doc.text('NOTES SUPPLÉMENTAIRES',M,y);y+=4;
+    doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(26,61,110);doc.text('NOTES SUPPLEMENTAIRES',M,y);y+=4;
     doc.setDrawColor(200,210,225);doc.line(M,y,PW-M,y);y+=5;
     doc.setFont('helvetica','italic');doc.setFontSize(8);doc.setTextColor(80,80,80);
-    const sn=doc.splitTextToSize(notesV,CW-4);doc.text(sn,M,y);y+=sn.length*5+6;
+    const sn=doc.splitTextToSize(pdfSafe(notesV),CW-4);doc.text(sn,M,y);y+=sn.length*5+6;
   }
 
   // Signatures
@@ -1477,7 +1477,7 @@ function generatePDF() {
   doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(100,110,130);
   doc.text("Signature de l'entrepreneur",M,y+5);doc.text('Signature du client',PH+10,y+5);
   doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(30,30,30);
-  doc.text(coName,M,y+10);doc.text(clName,PH+10,y+10);
+  doc.text(pdfSafe(coName),M,y+10);doc.text(pdfSafe(clName),PH+10,y+10);
   doc.text('Date : ___________________',M,y+17);doc.text('Date : ___________________',PH+10,y+17);
 
   // Footer
@@ -1485,7 +1485,7 @@ function generatePDF() {
   for(let p=1;p<=totalPages;p++){
     doc.setPage(p);doc.setFillColor(245,247,250);doc.rect(0,PH-10,PW,10,'F');
     doc.setFont('helvetica','normal');doc.setFontSize(7);doc.setTextColor(140,150,165);
-    doc.text(`${coName}  |  Soumission N° ${state.quoteNumber}  |  ${today}`,PW/2,PH-4,{align:'center'});
+    doc.text(pdfSafe(`${coName}  |  Soumission No ${state.quoteNumber}  |  ${today}`),PW/2,PH-4,{align:'center'});
     doc.text(`Page ${p} / ${totalPages}`,PW-M,PH-4,{align:'right'});
   }
 
@@ -1494,15 +1494,15 @@ function generatePDF() {
 
 function pdfTable(doc,y,margin,contentW,pageH,title,rows,subLabel){
   if(y+30>pageH-20){doc.addPage();y=margin;}
-  doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(26,61,110);doc.text(title,margin,y);y+=4;
+  doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(26,61,110);doc.text(pdfSafe(title),margin,y);y+=4;
   doc.setDrawColor(200,210,225);doc.setLineWidth(.3);doc.line(margin,y,margin+contentW,y);y+=3;
-  if(!rows.length){doc.setFont('helvetica','italic');doc.setFontSize(8);doc.setTextColor(160,170,180);doc.text('Aucun élément.',margin+4,y+5);return y+12;}
+  if(!rows.length){doc.setFont('helvetica','italic');doc.setFontSize(8);doc.setTextColor(160,170,180);doc.text('Aucun element.',margin+4,y+5);return y+12;}
   const sub=rows.reduce((s,r)=>s+(r.qty||0)*(r.price||0),0);
   doc.autoTable({
     startY:y,margin:{left:margin,right:margin},tableWidth:contentW,
     head:[[{content:'Description',styles:{halign:'left'}},{content:'Qté',styles:{halign:'center'}},{content:'Unité',styles:{halign:'center'}},{content:'Prix unit.',styles:{halign:'right'}},{content:'Total',styles:{halign:'right'}}]],
-    body:rows.filter(r=>r.desc||r.qty||r.price).map(r=>[r.desc||'—',{content:String(r.qty||0),styles:{halign:'center'}},{content:r.unit||'',styles:{halign:'center'}},{content:formatCAD(r.price||0),styles:{halign:'right'}},{content:formatCAD((r.qty||0)*(r.price||0)),styles:{halign:'right'}}]),
-    foot:[[{content:subLabel,colSpan:4,styles:{halign:'right',fontStyle:'bold',textColor:[26,61,110]}},{content:formatCAD(sub),styles:{halign:'right',fontStyle:'bold',textColor:[26,61,110]}}]],
+    body:rows.filter(r=>r.desc||r.qty||r.price).map(r=>[pdfSafe(r.desc||'-'),{content:String(r.qty||0),styles:{halign:'center'}},{content:r.unit||'',styles:{halign:'center'}},{content:formatCAD(r.price||0),styles:{halign:'right'}},{content:formatCAD((r.qty||0)*(r.price||0)),styles:{halign:'right'}}]),
+    foot:[[{content:pdfSafe(subLabel),colSpan:4,styles:{halign:'right',fontStyle:'bold',textColor:[26,61,110]}},{content:formatCAD(sub),styles:{halign:'right',fontStyle:'bold',textColor:[26,61,110]}}]],
     headStyles:{fillColor:[26,61,110],textColor:255,fontSize:8,fontStyle:'bold',cellPadding:3},
     bodyStyles:{fontSize:8,cellPadding:2.5,textColor:[40,40,40]},
     alternateRowStyles:{fillColor:[247,249,252]},
@@ -1513,9 +1513,19 @@ function pdfTable(doc,y,margin,contentW,pageH,title,rows,subLabel){
 }
 
 /* ─── Helpers ─── */
-function formatCAD(n){return new Intl.NumberFormat('fr-CA',{style:'currency',currency:'CAD'}).format(n||0);}
-function uid(){return Math.random().toString(36).slice(2,10);}
-</script>
-</body>
-</html>
-HTMLEOF
+function pdfSafe(str) {
+  return String(str || '')
+    .replace(/é/g, 'e').replace(/è/g, 'e').replace(/ê/g, 'e').replace(/ë/g, 'e')
+    .replace(/à/g, 'a').replace(/â/g, 'a').replace(/ä/g, 'a')
+    .replace(/ô/g, 'o').replace(/ö/g, 'o').replace(/ù/g, 'u')
+    .replace(/û/g, 'u').replace(/ü/g, 'u').replace(/î/g, 'i')
+    .replace(/ï/g, 'i').replace(/ç/g, 'c').replace(/ñ/g, 'n')
+    .replace(/É/g, 'E').replace(/È/g, 'E').replace(/Ê/g, 'E')
+    .replace(/À/g, 'A').replace(/Â/g, 'A').replace(/Ô/g, 'O')
+    .replace(/Ù/g, 'U').replace(/Û/g, 'U').replace(/Î/g, 'I')
+    .replace(/Ç/g, 'C').replace(/Œ/g, 'OE').replace(/œ/g, 'oe')
+    .replace(/²/g, '2').replace(/→/g, '->').replace(/—/g, '-')
+    .replace(/–/g, '-').replace(/«/g, '"').replace(/»/g, '"')
+    .replace(/‘/g, "'").replace(/’/g, "'").replace(/“/g, '"')
+    .replace(/”/g, '"').replace(/•/g, '*').replace(/…/g, '...')
+    .replace(/ /g, ' ').replace(/[^
