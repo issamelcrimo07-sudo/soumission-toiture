@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Soumissions Toiture Pro</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="logo-placeholder" title="Espace logo — ajoutez votre logo ici">
+        <span class="logo-icon">🏠</span>
+      </div>
+      <div class="brand-text">
+        <h1>Soumissions Toiture Pro</h1>
+        <p>Système de génération de soumissions professionnelles</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <span class="quote-number-badge" id="quoteNumberBadge">N° 2026-001</span>
+      <button class="btn btn-secondary" id="btnNewQuote">+ Nouvelle soumission</button>
+      <button class="btn btn-danger-outline" id="btnClearAll">Effacer tout</button>
+    </div>
+  </div>
+</header>
+
+<div class="status-bar">
+  <span class="status-indicator" id="statusIndicator">
+    <span class="status-dot"></span>
+    <span id="statusText">Chargement…</span>
+  </span>
+</div>
+
+<main class="app-main">
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 1 — INFOS ENTREPRISE
+  ══════════════════════════════════════════════ -->
+  <section class="card" id="sectionCompany">
+    <div class="card-header">
+      <span class="card-icon">🏢</span>
+      <h2>Informations de l'entreprise</h2>
+      <span class="card-badge saved-badge" id="companySavedBadge">✓ Mémorisé</span>
+    </div>
+    <div class="form-grid four-col">
+      <div class="field">
+        <label>Nom de l'entreprise</label>
+        <input type="text" id="companyName" placeholder="Toitures Dupont Inc." />
+      </div>
+      <div class="field">
+        <label>Téléphone</label>
+        <input type="tel" id="companyPhone" placeholder="514-555-0100" />
+      </div>
+      <div class="field">
+        <label>Courriel</label>
+        <input type="email" id="companyEmail" placeholder="info@toituresdupont.ca" />
+      </div>
+      <div class="field">
+        <label>Numéro RBQ</label>
+        <input type="text" id="companyRBQ" placeholder="5678-9012-34" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 2 — INFOS CLIENT
+  ══════════════════════════════════════════════ -->
+  <section class="card" id="sectionClient">
+    <div class="card-header">
+      <span class="card-icon">👤</span>
+      <h2>Informations du client</h2>
+    </div>
+    <div class="form-grid four-col">
+      <div class="field">
+        <label>Nom du client</label>
+        <input type="text" id="clientName" placeholder="Jean Tremblay" />
+      </div>
+      <div class="field">
+        <label>Téléphone</label>
+        <input type="tel" id="clientPhone" placeholder="438-555-0200" />
+      </div>
+      <div class="field">
+        <label>Courriel</label>
+        <input type="email" id="clientEmail" placeholder="jean@exemple.ca" />
+      </div>
+      <div class="field field-wide">
+        <label>Adresse des travaux</label>
+        <input type="text" id="clientAddress" placeholder="123 rue des Érables, Montréal, QC H2X 1A1" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 3 — TYPE DE TRAVAUX
+  ══════════════════════════════════════════════ -->
+  <section class="card" id="sectionWork">
+    <div class="card-header">
+      <span class="card-icon">🔨</span>
+      <h2>Type de travaux</h2>
+    </div>
+    <div class="work-type-tabs" id="workTypeTabs">
+      <button class="tab-btn active" data-type="remplacement">Remplacement complet</button>
+      <button class="tab-btn" data-type="reparation">Réparation partielle</button>
+      <button class="tab-btn" data-type="plate">Toiture plate</button>
+      <button class="tab-btn" data-type="bardeau">Bardeau asphalte</button>
+    </div>
+    <div class="form-grid three-col" style="margin-top:1.5rem">
+      <div class="field">
+        <label>Superficie (pi²)</label>
+        <input type="number" id="superficie" placeholder="2500" min="1" />
+      </div>
+      <div class="field">
+        <label>Date de début prévue</label>
+        <input type="date" id="startDate" />
+      </div>
+      <div class="field">
+        <label>Durée estimée</label>
+        <input type="text" id="duration" placeholder="3-5 jours ouvrables" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 4 — MATÉRIAUX
+  ══════════════════════════════════════════════ -->
+  <section class="card" id="sectionMaterials">
+    <div class="card-header">
+      <span class="card-icon">🪨</span>
+      <h2>Matériaux</h2>
+      <button class="btn btn-sm btn-outline" id="btnAddMaterial">+ Ajouter ligne</button>
+    </div>
+    <div class="table-wrapper">
+      <table class="items-table" id="materialsTable">
+        <thead>
+          <tr>
+            <th class="col-desc">Description</th>
+            <th class="col-qty">Quantité</th>
+            <th class="col-unit">Unité</th>
+            <th class="col-price">Prix unit.</th>
+            <th class="col-total">Total</th>
+            <th class="col-action"></th>
+          </tr>
+        </thead>
+        <tbody id="materialsTbody"></tbody>
+        <tfoot>
+          <tr class="subtotal-row">
+            <td colspan="4">Sous-total matériaux</td>
+            <td id="materialsSubtotal">0,00 $</td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 5 — MAIN-D'ŒUVRE
+  ══════════════════════════════════════════════ -->
+  <section class="card" id="sectionLabor">
+    <div class="card-header">
+      <span class="card-icon">👷</span>
+      <h2>Main-d'œuvre</h2>
+      <button class="btn btn-sm btn-outline" id="btnAddLabor">+ Ajouter ligne</button>
+    </div>
+    <div class="table-wrapper">
+      <table class="items-table" id="laborTable">
+        <thead>
+          <tr>
+            <th class="col-desc">Description</th>
+            <th class="col-qty">Quantité</th>
+            <th class="col-unit">Unité</th>
+            <th class="col-price">Prix unit.</th>
+            <th class="col-total">Total</th>
+            <th class="col-action"></th>
+          </tr>
+        </thead>
+        <tbody id="laborTbody"></tbody>
+        <tfoot>
+          <tr class="subtotal-row">
+            <td colspan="4">Sous-total main-d'œuvre</td>
+            <td id="laborSubtotal">0,00 $</td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 6 — ESCOMPTE
+  ══════════════════════════════════════════════ -->
+  <section class="card" id="sectionDiscount">
+    <div class="card-header">
+      <span class="card-icon">🏷️</span>
+      <h2>Escompte</h2>
+    </div>
+    <div class="form-grid three-col">
+      <div class="field">
+        <label>Type d'escompte</label>
+        <select id="discountType">
+          <option value="none">Aucun escompte</option>
+          <option value="percent">Pourcentage (%)</option>
+          <option value="fixed">Montant fixe ($)</option>
+        </select>
+      </div>
+      <div class="field" id="discountValueField" style="display:none">
+        <label id="discountValueLabel">Valeur</label>
+        <input type="number" id="discountValue" placeholder="0" min="0" step="0.01" />
+      </div>
+      <div class="field" id="discountReasonField" style="display:none">
+        <label>Raison de l'escompte</label>
+        <input type="text" id="discountReason" placeholder="Client fidèle, paiement comptant…" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 7 — GARANTIES & PAIEMENT
+  ══════════════════════════════════════════════ -->
+  <section class="card" id="sectionWarranty">
+    <div class="card-header">
+      <span class="card-icon">🛡️</span>
+      <h2>Garanties &amp; conditions</h2>
+    </div>
+    <div class="form-grid four-col">
+      <div class="field">
+        <label>Garantie main-d'œuvre</label>
+        <select id="laborWarranty">
+          <option value="1 an">1 an</option>
+          <option value="2 ans">2 ans</option>
+          <option value="3 ans">3 ans</option>
+          <option value="5 ans" selected>5 ans</option>
+          <option value="10 ans">10 ans</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Fabricant</label>
+        <select id="manufacturer">
+          <option value="">— Sélectionner —</option>
+          <option value="IKO">IKO</option>
+          <option value="CertainTeed">CertainTeed</option>
+          <option value="BP">BP (Building Products)</option>
+          <option value="Owens Corning">Owens Corning</option>
+          <option value="GAF">GAF</option>
+          <option value="Soprema">Soprema</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Garantie fabricant (suggérée)</label>
+        <input type="text" id="manufacturerWarranty" placeholder="Sélectionner un fabricant" readonly />
+      </div>
+      <div class="field">
+        <label>Mode de paiement</label>
+        <select id="paymentMode">
+          <option value="Comptant à la fin des travaux">Comptant — fin des travaux</option>
+          <option value="50% à la commande, 50% à la fin">50% commande / 50% fin</option>
+          <option value="Chèque à la fin des travaux">Chèque — fin des travaux</option>
+          <option value="Virement Interac">Virement Interac</option>
+          <option value="Carte de crédit (frais 2.5%)">Carte crédit (+2,5%)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Validité de la soumission</label>
+        <select id="quoteValidity">
+          <option value="15 jours">15 jours</option>
+          <option value="30 jours" selected>30 jours</option>
+          <option value="45 jours">45 jours</option>
+          <option value="60 jours">60 jours</option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 8 — EXCLUSIONS
+  ══════════════════════════════════════════════ -->
+  <section class="card" id="sectionExclusions">
+    <div class="card-header">
+      <span class="card-icon">🚫</span>
+      <h2>Exclusions (non inclus dans la soumission)</h2>
+    </div>
+    <div class="exclusions-grid" id="exclusionsGrid"></div>
+    <div class="field" style="margin-top:1rem">
+      <label>Exclusion personnalisée à ajouter</label>
+      <div class="add-exclusion-row">
+        <input type="text" id="customExclusionInput" placeholder="Décrire une exclusion supplémentaire…" />
+        <button class="btn btn-sm btn-outline" id="btnAddExclusion">Ajouter</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION 9 — NOTES
+  ══════════════════════════════════════════════ -->
+  <section class="card" id="sectionNotes">
+    <div class="card-header">
+      <span class="card-icon">📝</span>
+      <h2>Notes supplémentaires</h2>
+    </div>
+    <textarea id="notes" rows="4" placeholder="Conditions particulières, accès au chantier, coordonnées additionnelles…"></textarea>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       SECTION TOTAUX
+  ══════════════════════════════════════════════ -->
+  <section class="card totals-card" id="sectionTotals">
+    <div class="card-header">
+      <span class="card-icon">💰</span>
+      <h2>Résumé des coûts</h2>
+    </div>
+    <div class="totals-table">
+      <div class="totals-row">
+        <span>Sous-total matériaux</span>
+        <span id="totalMaterials">0,00 $</span>
+      </div>
+      <div class="totals-row">
+        <span>Sous-total main-d'œuvre</span>
+        <span id="totalLabor">0,00 $</span>
+      </div>
+      <div class="totals-row subtotal">
+        <span>Sous-total avant taxes</span>
+        <span id="subtotalBeforeTax">0,00 $</span>
+      </div>
+      <div class="totals-row discount-row" id="discountRow" style="display:none">
+        <span id="discountLabel">Escompte</span>
+        <span id="discountAmount">-0,00 $</span>
+      </div>
+      <div class="totals-row" id="afterDiscountRow" style="display:none">
+        <span>Sous-total après escompte</span>
+        <span id="subtotalAfterDiscount">0,00 $</span>
+      </div>
+      <div class="totals-row tax">
+        <span>TPS (5%)</span>
+        <span id="tps">0,00 $</span>
+      </div>
+      <div class="totals-row tax">
+        <span>TVQ (9,975%)</span>
+        <span id="tvq">0,00 $</span>
+      </div>
+      <div class="totals-row grand-total">
+        <span>TOTAL TTC</span>
+        <span id="grandTotal">0,00 $</span>
+      </div>
+    </div>
+    <div class="action-buttons">
+      <button class="btn btn-primary btn-large" id="btnDownloadPDF">
+        <span>⬇ Télécharger PDF</span>
+      </button>
+    </div>
+  </section>
+
+</main>
+
+<!-- MODAL CONFIRMATION -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <h3 id="modalTitle">Confirmation</h3>
+    <p id="modalMessage"></p>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" id="modalCancel">Annuler</button>
+      <button class="btn btn-danger" id="modalConfirm">Confirmer</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
