@@ -4,9 +4,627 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Soumissions Toiture Pro</title>
-  <link rel="stylesheet" href="style.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+  <style>
+/* ═══════════════════════════════════════════════════════════════
+   SOUMISSIONS TOITURE PRO — Styles
+   Police : Sora (display) + DM Sans (body)
+═══════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap');
+
+/* ─── Variables ──────────────────────────────────────────────── */
+:root {
+  --bg: #f4f5f7;
+  --surface: #ffffff;
+  --surface-2: #f9fafb;
+  --border: #e2e5ea;
+  --border-strong: #c8cdd6;
+
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-muted: #9ca3af;
+
+  --accent: #1a3d6e;       /* bleu ardoise foncé */
+  --accent-2: #2563eb;     /* bleu vif */
+  --accent-light: #eff6ff;
+  --accent-hover: #1e40af;
+
+  --danger: #dc2626;
+  --danger-light: #fef2f2;
+  --success: #16a34a;
+  --success-light: #f0fdf4;
+  --warning: #d97706;
+
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+  --shadow-md: 0 4px 16px rgba(0,0,0,.08), 0 2px 6px rgba(0,0,0,.04);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,.12);
+
+  --radius: 10px;
+  --radius-sm: 6px;
+  --radius-lg: 16px;
+
+  --font-display: 'Sora', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+
+  --header-h: 72px;
+  --status-h: 36px;
+}
+
+/* ─── Reset & Base ───────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  font-size: 14.5px;
+  color: var(--text-primary);
+  background: var(--bg);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── Header ─────────────────────────────────────────────────── */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--accent);
+  box-shadow: 0 2px 20px rgba(0,0,0,.25);
+  height: var(--header-h);
+}
+
+.header-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0 1.5rem;
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logo-placeholder {
+  width: 44px;
+  height: 44px;
+  background: rgba(255,255,255,.12);
+  border: 2px dashed rgba(255,255,255,.35);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: help;
+  transition: border-color .2s;
+  font-size: 20px;
+}
+.logo-placeholder:hover { border-color: rgba(255,255,255,.7); }
+
+.brand-text h1 {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -.3px;
+}
+.brand-text p {
+  font-size: .75rem;
+  color: rgba(255,255,255,.6);
+  margin-top: 1px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  flex-shrink: 0;
+}
+
+.quote-number-badge {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: .85rem;
+  color: #fff;
+  background: rgba(255,255,255,.15);
+  border: 1px solid rgba(255,255,255,.25);
+  padding: .35rem .85rem;
+  border-radius: 20px;
+  letter-spacing: .5px;
+}
+
+/* ─── Status Bar ─────────────────────────────────────────────── */
+.status-bar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  height: var(--status-h);
+  display: flex;
+  align-items: center;
+  padding: 0 1.5rem;
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  font-size: .78rem;
+  color: var(--text-muted);
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  transition: background .3s;
+}
+
+.status-indicator.saved .status-dot { background: var(--success); }
+.status-indicator.saved #statusText { color: var(--success); }
+.status-indicator.unsaved .status-dot { background: var(--warning); animation: pulse 1.5s infinite; }
+.status-indicator.unsaved #statusText { color: var(--warning); }
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .4; }
+}
+
+/* ─── Main Layout ────────────────────────────────────────────── */
+.app-main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.75rem 1.5rem 4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* ─── Cards ──────────────────────────────────────────────────── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  animation: cardIn .3s ease both;
+}
+
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: 1.1rem 1.5rem;
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border);
+}
+
+.card-icon { font-size: 1.1rem; }
+
+.card-header h2 {
+  font-family: var(--font-display);
+  font-size: .95rem;
+  font-weight: 700;
+  color: var(--accent);
+  flex: 1;
+}
+
+.card-badge {
+  font-size: .72rem;
+  font-weight: 600;
+  padding: .2rem .6rem;
+  border-radius: 20px;
+  background: var(--success-light);
+  color: var(--success);
+}
+
+.card > .form-grid,
+.card > .work-type-tabs,
+.card > .table-wrapper,
+.card > .exclusions-grid,
+.card > .totals-table,
+.card > textarea,
+.card > .action-buttons {
+  padding: 1.25rem 1.5rem;
+}
+
+/* ─── Form Grid ──────────────────────────────────────────────── */
+.form-grid {
+  display: grid;
+  gap: 1rem;
+}
+.four-col  { grid-template-columns: repeat(4, 1fr); }
+.three-col { grid-template-columns: repeat(3, 1fr); }
+.two-col   { grid-template-columns: repeat(2, 1fr); }
+
+.field { display: flex; flex-direction: column; gap: .4rem; }
+.field-wide { grid-column: span 2; }
+
+label {
+  font-size: .78rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="tel"],
+input[type="email"],
+input[type="date"],
+select,
+textarea {
+  font-family: var(--font-body);
+  font-size: .9rem;
+  color: var(--text-primary);
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: .55rem .8rem;
+  width: 100%;
+  transition: border-color .15s, box-shadow .15s;
+  outline: none;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--accent-2);
+  box-shadow: 0 0 0 3px rgba(37,99,235,.12);
+}
+
+input[readonly] { background: var(--surface-2); cursor: default; }
+
+textarea { resize: vertical; min-height: 90px; }
+
+select { cursor: pointer; }
+
+/* ─── Work Type Tabs ─────────────────────────────────────────── */
+.work-type-tabs {
+  display: flex;
+  gap: .5rem;
+  flex-wrap: wrap;
+  padding: 1rem 1.5rem 0;
+}
+
+.tab-btn {
+  font-family: var(--font-display);
+  font-size: .82rem;
+  font-weight: 600;
+  padding: .55rem 1.1rem;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all .2s;
+}
+.tab-btn:hover { border-color: var(--accent-2); color: var(--accent-2); }
+.tab-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(26,61,110,.3);
+}
+
+/* ─── Items Table ────────────────────────────────────────────── */
+.table-wrapper { overflow-x: auto; }
+
+.items-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .88rem;
+}
+
+.items-table thead th {
+  font-family: var(--font-display);
+  font-size: .72rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: .6px;
+  background: var(--surface-2);
+  padding: .65rem .75rem;
+  border-bottom: 2px solid var(--border);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.items-table td {
+  padding: .45rem .6rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.items-table tbody tr:hover td { background: var(--accent-light); }
+
+.col-desc  { min-width: 220px; }
+.col-qty   { width: 90px; }
+.col-unit  { width: 110px; }
+.col-price { width: 120px; }
+.col-total { width: 120px; font-weight: 600; color: var(--accent); text-align: right; }
+.col-action { width: 40px; text-align: center; }
+
+.items-table input, .items-table select {
+  padding: .35rem .5rem;
+  font-size: .85rem;
+}
+
+.items-table .col-total td { text-align: right; }
+
+.subtotal-row td {
+  background: var(--surface-2);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: .88rem;
+  color: var(--accent);
+  padding: .75rem .75rem;
+  border-top: 2px solid var(--border);
+}
+.subtotal-row td:first-child { color: var(--text-secondary); font-weight: 600; }
+
+/* ─── Buttons ────────────────────────────────────────────────── */
+.btn {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: .82rem;
+  padding: .55rem 1.1rem;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  transition: all .15s;
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: var(--accent-2);
+  color: #fff;
+}
+.btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(37,99,235,.3); }
+
+.btn-secondary {
+  background: rgba(255,255,255,.15);
+  color: #fff;
+  border: 1.5px solid rgba(255,255,255,.3);
+}
+.btn-secondary:hover { background: rgba(255,255,255,.25); }
+
+.btn-outline {
+  background: transparent;
+  color: var(--accent-2);
+  border: 1.5px solid var(--accent-2);
+}
+.btn-outline:hover { background: var(--accent-light); }
+
+.btn-danger {
+  background: var(--danger);
+  color: #fff;
+}
+.btn-danger:hover { background: #b91c1c; }
+
+.btn-danger-outline {
+  background: transparent;
+  color: rgba(255,255,255,.75);
+  border: 1.5px solid rgba(255,255,255,.3);
+}
+.btn-danger-outline:hover { color: #fff; border-color: rgba(255,255,255,.7); background: rgba(220,38,38,.2); }
+
+.btn-sm {
+  padding: .35rem .8rem;
+  font-size: .77rem;
+}
+
+.btn-large {
+  padding: .85rem 2rem;
+  font-size: .95rem;
+}
+
+.btn-icon-del {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  background: transparent;
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  transition: all .15s;
+}
+.btn-icon-del:hover { background: var(--danger-light); border-color: var(--danger); color: var(--danger); }
+
+/* ─── Discount ───────────────────────────────────────────────── */
+#sectionDiscount .form-grid { padding-top: 1.25rem; }
+
+/* ─── Exclusions ─────────────────────────────────────────────── */
+.exclusions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: .6rem;
+}
+
+.exclusion-item {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  padding: .55rem .8rem;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  cursor: pointer;
+  transition: all .15s;
+  user-select: none;
+}
+.exclusion-item:hover { border-color: var(--accent-2); background: var(--accent-light); }
+.exclusion-item.checked { background: var(--accent-light); border-color: var(--accent-2); }
+.exclusion-item.checked .excl-label { color: var(--accent); font-weight: 600; }
+
+.excl-checkbox {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+  border: 2px solid var(--border-strong);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .7rem;
+  transition: all .15s;
+  background: #fff;
+}
+.exclusion-item.checked .excl-checkbox { background: var(--accent-2); border-color: var(--accent-2); color: #fff; }
+
+.excl-label { font-size: .85rem; color: var(--text-secondary); flex: 1; }
+
+.add-exclusion-row {
+  display: flex;
+  gap: .6rem;
+}
+.add-exclusion-row input { flex: 1; }
+
+/* ─── Totals ─────────────────────────────────────────────────── */
+.totals-card .totals-table { border-top: none; }
+
+.totals-table {
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+}
+
+.totals-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: .45rem .75rem;
+  border-radius: var(--radius-sm);
+  font-size: .9rem;
+}
+
+.totals-row.subtotal {
+  background: var(--surface-2);
+  font-weight: 700;
+  border-top: 1px solid var(--border);
+  margin-top: .25rem;
+  padding-top: .65rem;
+}
+
+.totals-row.discount-row { color: var(--danger); }
+
+.totals-row.tax { color: var(--text-secondary); font-size: .85rem; }
+
+.totals-row.grand-total {
+  background: var(--accent);
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 800;
+  border-radius: var(--radius);
+  margin-top: .5rem;
+  padding: .85rem 1rem;
+  box-shadow: 0 4px 16px rgba(26,61,110,.25);
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+  margin-top: .5rem;
+}
+
+/* ─── Modal ──────────────────────────────────────────────────── */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+  backdrop-filter: blur(3px);
+  z-index: 999;
+  align-items: center;
+  justify-content: center;
+}
+.modal-overlay.open { display: flex; }
+
+.modal {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: var(--shadow-lg);
+  animation: modalIn .2s ease;
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.modal h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: .75rem;
+}
+
+.modal p { color: var(--text-secondary); font-size: .9rem; line-height: 1.6; margin-bottom: 1.5rem; }
+
+.modal-actions { display: flex; gap: .75rem; justify-content: flex-end; }
+
+/* ─── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .four-col  { grid-template-columns: repeat(2, 1fr); }
+  .three-col { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 640px) {
+  :root { --header-h: auto; }
+
+  .app-header { position: relative; }
+  .header-inner {
+    flex-wrap: wrap;
+    padding: 1rem;
+    height: auto;
+    gap: .75rem;
+  }
+  .header-actions { width: 100%; flex-wrap: wrap; }
+  .quote-number-badge { order: -1; }
+
+  .four-col, .three-col, .two-col { grid-template-columns: 1fr; }
+  .field-wide { grid-column: span 1; }
+
+  .work-type-tabs { gap: .4rem; }
+  .tab-btn { font-size: .75rem; padding: .45rem .8rem; }
+
+  .app-main { padding: 1rem; gap: 1rem; }
+
+  .col-desc { min-width: 140px; }
+  .col-qty, .col-unit { width: 70px; }
+  .col-price, .col-total { width: 90px; }
+
+  .action-buttons { justify-content: stretch; }
+  .action-buttons .btn { width: 100%; justify-content: center; }
+}
+
+/* ─── Print (safety) ─────────────────────────────────────────── */
+@media print { body { display: none; } }
+  </style>
 </head>
 <body>
 
@@ -368,6 +986,1065 @@
   </div>
 </div>
 
-<script src="app.js"></script>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   SOUMISSIONS TOITURE PRO — Application Logic
+═══════════════════════════════════════════════════════════════ */
+
+'use strict';
+
+/* ─── Constants ──────────────────────────────────────────────── */
+const TPS_RATE = 0.05;
+const TVQ_RATE = 0.09975;
+
+const MANUFACTURER_WARRANTIES = {
+  IKO: '25 ans limité (IKO Dynasty / Cambridge)',
+  CertainTeed: '50 ans limité SureStart PLUS™',
+  BP: '40 ans limité BP Mystique 42',
+  'Owens Corning': '50 ans limité TruDefinition®',
+  GAF: '50 ans limité Timberline HD®',
+  Soprema: '20 ans membrane SOPRALENE',
+};
+
+const WORK_TYPES = {
+  remplacement: 'Remplacement complet de toiture',
+  reparation: 'Réparation partielle de toiture',
+  plate: 'Toiture plate (membrane)',
+  bardeau: 'Bardeau asphalte',
+};
+
+const DEFAULT_MATERIALS = {
+  remplacement: [
+    { desc: 'Bardeaux asphalte architectural 30 ans', qty: 25, unit: 'sq', price: 120 },
+    { desc: 'Membrane sous-couche synthétique', qty: 25, unit: 'sq', price: 18 },
+    { desc: 'Membrane auto-adhésive (rives & noues)', qty: 4, unit: 'sq', price: 85 },
+    { desc: 'Ventilation de faîte (ridge vent)', qty: 30, unit: 'pi', price: 8 },
+    { desc: 'Solin aluminium (cheminée, murs, évent)', qty: 1, unit: 'for', price: 320 },
+    { desc: 'Clous à toiture galvanisés', qty: 6, unit: 'bte', price: 35 },
+    { desc: 'Contreplaqué 5/8 OSB (si requis)', qty: 0, unit: 'feuille', price: 48 },
+  ],
+  reparation: [
+    { desc: 'Bardeaux asphalte assortis (remplacement)', qty: 2, unit: 'bte', price: 65 },
+    { desc: 'Membrane auto-adhésive Ice & Water', qty: 1, unit: 'sq', price: 85 },
+    { desc: 'Solin de réparation aluminium', qty: 1, unit: 'for', price: 150 },
+    { desc: 'Calfeutrant polyuréthane extérieur', qty: 2, unit: 'tube', price: 18 },
+    { desc: 'Clous à toiture galvanisés', qty: 1, unit: 'bte', price: 35 },
+  ],
+  plate: [
+    { desc: 'Membrane EPDM 60 mil ou TPO 60 mil', qty: 20, unit: 'sq', price: 185 },
+    { desc: 'Isolant polyiso 2 po', qty: 20, unit: 'sq', price: 95 },
+    { desc: 'Membrane pare-vapeur', qty: 20, unit: 'sq', price: 22 },
+    { desc: 'Drain de toit avec natte de drainage', qty: 2, unit: 'un.', price: 280 },
+    { desc: 'Solins métalliques périmètre / parapet', qty: 60, unit: 'pi', price: 14 },
+    { desc: 'Colle et fixations spéciales (toiture plate)', qty: 1, unit: 'for', price: 450 },
+  ],
+  bardeau: [
+    { desc: 'Bardeaux asphalte architectural IKO Cambridge 40', qty: 25, unit: 'sq', price: 145 },
+    { desc: 'Membrane sous-couche synthétique Hi-Dry 30#', qty: 25, unit: 'sq', price: 18 },
+    { desc: 'Ice & Water Shield (rive de toit 2 rangées)', qty: 5, unit: 'sq', price: 85 },
+    { desc: 'Bardeaux de faîte', qty: 8, unit: 'bte', price: 55 },
+    { desc: 'Solin aluminium peint (cheminée, murs)', qty: 1, unit: 'for', price: 300 },
+    { desc: 'Ventilation passive (turbines ou ridge vent)', qty: 3, unit: 'un.', price: 90 },
+    { desc: 'Clous à toiture galvanisés 1-3/4 po', qty: 6, unit: 'bte', price: 35 },
+  ],
+};
+
+const DEFAULT_LABOR = {
+  remplacement: [
+    { desc: 'Dépose et évacuation ancienne toiture', qty: 1, unit: 'for', price: 1400 },
+    { desc: 'Installation membrane et bardeaux', qty: 25, unit: 'sq', price: 85 },
+    { desc: 'Installation solin et ventilation', qty: 1, unit: 'for', price: 650 },
+    { desc: 'Nettoyage et disposition des débris', qty: 1, unit: 'for', price: 250 },
+  ],
+  reparation: [
+    { desc: 'Dépose bardeaux endommagés', qty: 1, unit: 'for', price: 250 },
+    { desc: 'Réparation charpente si nécessaire', qty: 0, unit: 'h', price: 95 },
+    { desc: 'Pose bardeaux de remplacement', qty: 1, unit: 'for', price: 380 },
+    { desc: 'Scellement solins et calfeutrage', qty: 1, unit: 'for', price: 200 },
+  ],
+  plate: [
+    { desc: 'Dépose membrane existante et nettoyage', qty: 1, unit: 'for', price: 1200 },
+    { desc: 'Installation isolant et pare-vapeur', qty: 20, unit: 'sq', price: 45 },
+    { desc: 'Installation membrane (soudage/colle)', qty: 20, unit: 'sq', price: 110 },
+    { desc: 'Installation solins périmètre', qty: 1, unit: 'for', price: 750 },
+    { desc: 'Test d\'étanchéité et finition', qty: 1, unit: 'for', price: 350 },
+  ],
+  bardeau: [
+    { desc: 'Dépose bardeaux et nettoyage', qty: 1, unit: 'for', price: 1200 },
+    { desc: 'Inspection et réparation de la charpente', qty: 1, unit: 'for', price: 400 },
+    { desc: 'Installation membranes et bardeaux', qty: 25, unit: 'sq', price: 90 },
+    { desc: 'Installation faîte, solins, ventilation', qty: 1, unit: 'for', price: 700 },
+    { desc: 'Nettoyage final du chantier', qty: 1, unit: 'for', price: 250 },
+  ],
+};
+
+const DEFAULT_EXCLUSIONS = {
+  remplacement: [
+    'Réparation ou remplacement de la charpente (si requis)',
+    'Traitement de la moisissure ou des champignons',
+    'Travaux de peinture ou de finition intérieure',
+    'Isolation supplémentaire non prévue',
+    'Réparation des gouttières et descentes pluviales',
+    'Permis de construction (à la charge du client)',
+    'Travaux de maçonnerie ou de cheminée',
+    'Déblaiement des accès obstrués',
+    'Bacs à fleurs, climatiseurs ou antennes sur le toit',
+  ],
+  reparation: [
+    'Remplacement complet de la toiture',
+    'Travaux de charpente non identifiés',
+    'Remplacement des gouttières',
+    'Permis de construction',
+    'Traitement de la moisissure',
+    'Isolation supplémentaire',
+  ],
+  plate: [
+    'Réparation de la structure portante',
+    'Travaux de drainage intérieur',
+    'Imperméabilisation des fondations',
+    'Isolation thermique supplémentaire non prévue',
+    'Permis de construction',
+    'Traitement de la moisissure',
+    'Installation de puits de lumière',
+    'Accès difficile non identifié lors de la visite',
+  ],
+  bardeau: [
+    'Réparation de la charpente au-delà du diagnostic',
+    'Remplacement des gouttières et descentes',
+    'Travaux de maçonnerie (cheminée)',
+    'Traitement de la moisissure',
+    'Isolation supplémentaire',
+    'Permis de construction',
+    'Dépose de panneaux solaires',
+    'Calfeutrage de fenêtres de toit (Velux)',
+  ],
+};
+
+/* ─── State ──────────────────────────────────────────────────── */
+let state = {
+  quoteNumber: null,
+  workType: 'remplacement',
+  materials: [],
+  labor: [],
+  exclusions: [],
+  customExclusions: [],
+};
+let saveTimer = null;
+let dirtyFlag = false;
+
+/* ─── DOM refs ───────────────────────────────────────────────── */
+const $ = id => document.getElementById(id);
+const $$ = sel => document.querySelectorAll(sel);
+
+/* ═══════════════════════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  loadCompanyFromStorage();
+  initQuoteNumber();
+  setWorkType('remplacement', false);
+  loadQuoteFromStorage();
+  bindEvents();
+  setStatus('saved');
+  setupAutoSave();
+});
+
+/* ─── Quote Number ───────────────────────────────────────────── */
+function initQuoteNumber() {
+  const year = new Date().getFullYear();
+  const stored = localStorage.getItem('rtp_lastQuoteNumber');
+  if (!stored) {
+    state.quoteNumber = `${year}-001`;
+  } else {
+    const [y, seq] = stored.split('-');
+    if (parseInt(y) < year) {
+      state.quoteNumber = `${year}-001`;
+    } else {
+      state.quoteNumber = stored;
+    }
+  }
+  $('quoteNumberBadge').textContent = `N° ${state.quoteNumber}`;
+}
+
+function incrementQuoteNumber() {
+  const [year, seq] = state.quoteNumber.split('-');
+  const next = String(parseInt(seq) + 1).padStart(3, '0');
+  state.quoteNumber = `${year}-${next}`;
+  localStorage.setItem('rtp_lastQuoteNumber', state.quoteNumber);
+  $('quoteNumberBadge').textContent = `N° ${state.quoteNumber}`;
+}
+
+/* ─── Company ────────────────────────────────────────────────── */
+function loadCompanyFromStorage() {
+  const data = localStorage.getItem('rtp_company');
+  if (!data) return;
+  try {
+    const co = JSON.parse(data);
+    $('companyName').value  = co.name  || '';
+    $('companyPhone').value = co.phone || '';
+    $('companyEmail').value = co.email || '';
+    $('companyRBQ').value   = co.rbq   || '';
+  } catch(e) {}
+}
+
+function saveCompanyToStorage() {
+  const co = {
+    name:  $('companyName').value,
+    phone: $('companyPhone').value,
+    email: $('companyEmail').value,
+    rbq:   $('companyRBQ').value,
+  };
+  localStorage.setItem('rtp_company', JSON.stringify(co));
+  $('companySavedBadge').style.opacity = '1';
+  setTimeout(() => { $('companySavedBadge').style.opacity = '.5'; }, 1000);
+}
+
+/* ─── Work Type ──────────────────────────────────────────────── */
+function setWorkType(type, reload = true) {
+  state.workType = type;
+  $$('#workTypeTabs .tab-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.type === type);
+  });
+  if (reload) {
+    state.materials = DEFAULT_MATERIALS[type].map(m => ({ ...m, id: uid() }));
+    state.labor = DEFAULT_LABOR[type].map(l => ({ ...l, id: uid() }));
+    state.exclusions = DEFAULT_EXCLUSIONS[type].map(e => ({ text: e, checked: true, custom: false, id: uid() }));
+    state.customExclusions = [];
+    renderMaterials();
+    renderLabor();
+    renderExclusions();
+    calcTotals();
+  }
+}
+
+/* ─── Rows rendering ─────────────────────────────────────────── */
+function renderMaterials() {
+  const tbody = $('materialsTbody');
+  tbody.innerHTML = '';
+  state.materials.forEach(row => tbody.appendChild(createRow(row, 'mat')));
+  updateSubtotals();
+}
+
+function renderLabor() {
+  const tbody = $('laborTbody');
+  tbody.innerHTML = '';
+  state.labor.forEach(row => tbody.appendChild(createRow(row, 'lab')));
+  updateSubtotals();
+}
+
+function createRow(row, prefix) {
+  const tr = document.createElement('tr');
+  const units = ['pi²','sq','bte','for','h','pi','m','un.','feuille','tube','rouleau','sac'];
+  tr.innerHTML = `
+    <td><input type="text" value="${esc(row.desc)}" data-field="desc" data-id="${row.id}" data-prefix="${prefix}" class="item-input"/></td>
+    <td><input type="number" value="${row.qty}" min="0" step="any" data-field="qty" data-id="${row.id}" data-prefix="${prefix}" class="item-input"/></td>
+    <td>
+      <select data-field="unit" data-id="${row.id}" data-prefix="${prefix}" class="item-input">
+        ${units.map(u => `<option ${u===row.unit?'selected':''}>${u}</option>`).join('')}
+      </select>
+    </td>
+    <td><input type="number" value="${row.price}" min="0" step="0.01" data-field="price" data-id="${row.id}" data-prefix="${prefix}" class="item-input"/></td>
+    <td class="col-total" id="total-${row.id}">${formatCAD(row.qty * row.price)}</td>
+    <td><button class="btn-icon-del" data-del="${row.id}" data-prefix="${prefix}" title="Supprimer">×</button></td>
+  `;
+  return tr;
+}
+
+function esc(str) {
+  return String(str||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+}
+
+/* ─── Item input events ──────────────────────────────────────── */
+document.addEventListener('input', e => {
+  const el = e.target;
+  if (!el.classList.contains('item-input')) return;
+  const { field, id, prefix } = el.dataset;
+  const arr = prefix === 'mat' ? state.materials : state.labor;
+  const row = arr.find(r => r.id === id);
+  if (!row) return;
+  if (field === 'qty' || field === 'price') {
+    row[field] = parseFloat(el.value) || 0;
+  } else {
+    row[field] = el.value;
+  }
+  const total = (row.qty || 0) * (row.price || 0);
+  const cell = document.getElementById('total-' + id);
+  if (cell) cell.textContent = formatCAD(total);
+  updateSubtotals();
+  markDirty();
+});
+
+document.addEventListener('click', e => {
+  const btn = e.target.closest('[data-del]');
+  if (!btn) return;
+  const { del: id, prefix } = btn.dataset;
+  if (prefix === 'mat') {
+    state.materials = state.materials.filter(r => r.id !== id);
+    renderMaterials();
+  } else {
+    state.labor = state.labor.filter(r => r.id !== id);
+    renderLabor();
+  }
+  markDirty();
+});
+
+function addMaterialRow() {
+  state.materials.push({ id: uid(), desc: '', qty: 1, unit: 'un.', price: 0 });
+  renderMaterials();
+  markDirty();
+}
+
+function addLaborRow() {
+  state.labor.push({ id: uid(), desc: '', qty: 1, unit: 'for', price: 0 });
+  renderLabor();
+  markDirty();
+}
+
+/* ─── Exclusions ─────────────────────────────────────────────── */
+function renderExclusions() {
+  const grid = $('exclusionsGrid');
+  grid.innerHTML = '';
+  const all = [
+    ...state.exclusions,
+    ...state.customExclusions,
+  ];
+  all.forEach(excl => {
+    const div = document.createElement('div');
+    div.className = `exclusion-item${excl.checked ? ' checked' : ''}`;
+    div.dataset.id = excl.id;
+    div.innerHTML = `
+      <div class="excl-checkbox">${excl.checked ? '✓' : ''}</div>
+      <span class="excl-label">${esc(excl.text)}</span>
+      ${excl.custom ? `<button class="btn-icon-del" data-excl-del="${excl.id}" title="Supprimer" style="margin-left:auto">×</button>` : ''}
+    `;
+    div.addEventListener('click', ev => {
+      if (ev.target.closest('[data-excl-del]')) return;
+      excl.checked = !excl.checked;
+      renderExclusions();
+      markDirty();
+    });
+    const delBtn = div.querySelector('[data-excl-del]');
+    if (delBtn) {
+      delBtn.addEventListener('click', ev => {
+        ev.stopPropagation();
+        state.customExclusions = state.customExclusions.filter(ex => ex.id !== excl.id);
+        renderExclusions();
+        markDirty();
+      });
+    }
+    grid.appendChild(div);
+  });
+}
+
+function addCustomExclusion() {
+  const input = $('customExclusionInput');
+  const text = input.value.trim();
+  if (!text) return;
+  state.customExclusions.push({ id: uid(), text, checked: true, custom: true });
+  input.value = '';
+  renderExclusions();
+  markDirty();
+}
+
+/* ─── Totals ─────────────────────────────────────────────────── */
+function updateSubtotals() {
+  const matSub = state.materials.reduce((sum, r) => sum + (r.qty||0)*(r.price||0), 0);
+  const labSub = state.labor.reduce((sum, r) => sum + (r.qty||0)*(r.price||0), 0);
+  $('materialsSubtotal').textContent = formatCAD(matSub);
+  $('laborSubtotal').textContent = formatCAD(labSub);
+  calcTotals();
+}
+
+function calcTotals() {
+  const matSub = state.materials.reduce((sum, r) => sum + (r.qty||0)*(r.price||0), 0);
+  const labSub = state.labor.reduce((sum, r) => sum + (r.qty||0)*(r.price||0), 0);
+  const beforeTax = matSub + labSub;
+
+  $('totalMaterials').textContent = formatCAD(matSub);
+  $('totalLabor').textContent = formatCAD(labSub);
+  $('subtotalBeforeTax').textContent = formatCAD(beforeTax);
+
+  // Discount
+  const dtype = $('discountType').value;
+  let discountAmt = 0;
+  if (dtype !== 'none') {
+    const val = parseFloat($('discountValue').value) || 0;
+    if (dtype === 'percent') discountAmt = beforeTax * (val / 100);
+    else discountAmt = val;
+    discountAmt = Math.min(discountAmt, beforeTax);
+  }
+
+  const discountRow = $('discountRow');
+  const afterDiscountRow = $('afterDiscountRow');
+  if (discountAmt > 0) {
+    const reason = $('discountReason').value;
+    $('discountLabel').textContent = dtype === 'percent'
+      ? `Escompte ${parseFloat($('discountValue').value)||0}%${reason ? ' — '+reason : ''}`
+      : `Escompte${reason ? ' — '+reason : ''}`;
+    $('discountAmount').textContent = `-${formatCAD(discountAmt)}`;
+    discountRow.style.display = '';
+    afterDiscountRow.style.display = '';
+  } else {
+    discountRow.style.display = 'none';
+    afterDiscountRow.style.display = 'none';
+  }
+
+  const taxable = beforeTax - discountAmt;
+  $('subtotalAfterDiscount').textContent = formatCAD(taxable);
+
+  const tps = taxable * TPS_RATE;
+  const tvq = taxable * TVQ_RATE;
+  const grand = taxable + tps + tvq;
+
+  $('tps').textContent = formatCAD(tps);
+  $('tvq').textContent = formatCAD(tvq);
+  $('grandTotal').textContent = formatCAD(grand);
+}
+
+/* ─── Manufacturer warranty ──────────────────────────────────── */
+function updateManufacturerWarranty() {
+  const m = $('manufacturer').value;
+  $('manufacturerWarranty').value = m ? MANUFACTURER_WARRANTIES[m] || '' : '';
+}
+
+/* ─── Events binding ─────────────────────────────────────────── */
+function bindEvents() {
+  // Company fields
+  ['companyName','companyPhone','companyEmail','companyRBQ'].forEach(id => {
+    $(id).addEventListener('input', () => { saveCompanyToStorage(); markDirty(); });
+  });
+
+  // Work type tabs
+  $$('#workTypeTabs .tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => setWorkType(btn.dataset.type));
+  });
+
+  // Add rows
+  $('btnAddMaterial').addEventListener('click', addMaterialRow);
+  $('btnAddLabor').addEventListener('click', addLaborRow);
+
+  // Discount
+  $('discountType').addEventListener('change', () => {
+    const v = $('discountType').value;
+    $('discountValueField').style.display = v === 'none' ? 'none' : '';
+    $('discountReasonField').style.display = v === 'none' ? 'none' : '';
+    if (v === 'percent') $('discountValueLabel').textContent = 'Pourcentage (%)';
+    else $('discountValueLabel').textContent = 'Montant ($)';
+    calcTotals(); markDirty();
+  });
+  $('discountValue').addEventListener('input', () => { calcTotals(); markDirty(); });
+  $('discountReason').addEventListener('input', () => { calcTotals(); markDirty(); });
+
+  // Manufacturer
+  $('manufacturer').addEventListener('change', () => { updateManufacturerWarranty(); markDirty(); });
+
+  // Other fields
+  ['superficie','startDate','duration','clientName','clientPhone','clientEmail','clientAddress',
+   'laborWarranty','paymentMode','quoteValidity','notes'].forEach(id => {
+    $(id).addEventListener('input', () => markDirty());
+  });
+
+  // Exclusions add
+  $('btnAddExclusion').addEventListener('click', addCustomExclusion);
+  $('customExclusionInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); addCustomExclusion(); }
+  });
+
+  // New quote
+  $('btnNewQuote').addEventListener('click', () => {
+    showModal(
+      'Nouvelle soumission',
+      'Créer une nouvelle soumission ? Les informations du formulaire actuel seront effacées (mais les infos de votre entreprise seront conservées).',
+      () => {
+        incrementQuoteNumber();
+        resetQuote();
+        setWorkType('remplacement', true);
+        setStatus('saved');
+      }
+    );
+  });
+
+  // Clear all
+  $('btnClearAll').addEventListener('click', () => {
+    showModal(
+      'Effacer tout',
+      'Effacer toutes les données, y compris les informations de l\'entreprise et réinitialiser le compteur de soumissions ?',
+      () => {
+        localStorage.clear();
+        location.reload();
+      }
+    );
+  });
+
+  // PDF
+  $('btnDownloadPDF').addEventListener('click', generatePDF);
+
+  // Modal
+  $('modalCancel').addEventListener('click', () => closeModal());
+  $('modalOverlay').addEventListener('click', e => {
+    if (e.target === $('modalOverlay')) closeModal();
+  });
+}
+
+/* ─── Auto-save ──────────────────────────────────────────────── */
+function setupAutoSave() {
+  const fields = document.querySelectorAll('input, select, textarea');
+  fields.forEach(f => {
+    f.addEventListener('input', () => markDirty());
+    f.addEventListener('change', () => markDirty());
+  });
+}
+
+function markDirty() {
+  dirtyFlag = true;
+  setStatus('unsaved');
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    saveQuoteToStorage();
+    setStatus('saved');
+    dirtyFlag = false;
+  }, 1500);
+}
+
+function setStatus(s) {
+  const el = $('statusIndicator');
+  el.className = 'status-indicator ' + s;
+  $('statusText').textContent = s === 'saved' ? 'Sauvegardé automatiquement' : 'Modifications non sauvegardées…';
+}
+
+/* ─── Storage ────────────────────────────────────────────────── */
+function saveQuoteToStorage() {
+  const snapshot = {
+    quoteNumber: state.quoteNumber,
+    workType: state.workType,
+    materials: state.materials,
+    labor: state.labor,
+    exclusions: state.exclusions,
+    customExclusions: state.customExclusions,
+    fields: {
+      clientName: $('clientName').value,
+      clientPhone: $('clientPhone').value,
+      clientEmail: $('clientEmail').value,
+      clientAddress: $('clientAddress').value,
+      superficie: $('superficie').value,
+      startDate: $('startDate').value,
+      duration: $('duration').value,
+      discountType: $('discountType').value,
+      discountValue: $('discountValue').value,
+      discountReason: $('discountReason').value,
+      laborWarranty: $('laborWarranty').value,
+      manufacturer: $('manufacturer').value,
+      manufacturerWarranty: $('manufacturerWarranty').value,
+      paymentMode: $('paymentMode').value,
+      quoteValidity: $('quoteValidity').value,
+      notes: $('notes').value,
+    }
+  };
+  localStorage.setItem('rtp_quote', JSON.stringify(snapshot));
+}
+
+function loadQuoteFromStorage() {
+  const raw = localStorage.getItem('rtp_quote');
+  if (!raw) {
+    // Fresh start — load defaults
+    state.materials = DEFAULT_MATERIALS.remplacement.map(m => ({ ...m, id: uid() }));
+    state.labor = DEFAULT_LABOR.remplacement.map(l => ({ ...l, id: uid() }));
+    state.exclusions = DEFAULT_EXCLUSIONS.remplacement.map(e => ({ text: e, checked: true, custom: false, id: uid() }));
+    renderMaterials();
+    renderLabor();
+    renderExclusions();
+    return;
+  }
+  try {
+    const snap = JSON.parse(raw);
+    if (snap.quoteNumber) {
+      state.quoteNumber = snap.quoteNumber;
+      $('quoteNumberBadge').textContent = `N° ${snap.quoteNumber}`;
+      localStorage.setItem('rtp_lastQuoteNumber', snap.quoteNumber);
+    }
+    state.workType = snap.workType || 'remplacement';
+    state.materials = snap.materials || [];
+    state.labor = snap.labor || [];
+    state.exclusions = snap.exclusions || [];
+    state.customExclusions = snap.customExclusions || [];
+
+    $$('#workTypeTabs .tab-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.type === state.workType);
+    });
+
+    const f = snap.fields || {};
+    $('clientName').value    = f.clientName || '';
+    $('clientPhone').value   = f.clientPhone || '';
+    $('clientEmail').value   = f.clientEmail || '';
+    $('clientAddress').value = f.clientAddress || '';
+    $('superficie').value    = f.superficie || '';
+    $('startDate').value     = f.startDate || '';
+    $('duration').value      = f.duration || '';
+    $('discountType').value  = f.discountType || 'none';
+    $('discountValue').value = f.discountValue || '';
+    $('discountReason').value = f.discountReason || '';
+    $('laborWarranty').value = f.laborWarranty || '5 ans';
+    $('manufacturer').value  = f.manufacturer || '';
+    $('manufacturerWarranty').value = f.manufacturerWarranty || '';
+    $('paymentMode').value   = f.paymentMode || '';
+    $('quoteValidity').value = f.quoteValidity || '30 jours';
+    $('notes').value         = f.notes || '';
+
+    // Restore discount visibility
+    const dtype = $('discountType').value;
+    $('discountValueField').style.display = dtype === 'none' ? 'none' : '';
+    $('discountReasonField').style.display = dtype === 'none' ? 'none' : '';
+    if (dtype === 'percent') $('discountValueLabel').textContent = 'Pourcentage (%)';
+    else if (dtype === 'fixed') $('discountValueLabel').textContent = 'Montant ($)';
+
+    renderMaterials();
+    renderLabor();
+    renderExclusions();
+    calcTotals();
+  } catch(e) {
+    console.warn('Could not restore quote:', e);
+  }
+}
+
+function resetQuote() {
+  state.materials = [];
+  state.labor = [];
+  state.exclusions = [];
+  state.customExclusions = [];
+  ['clientName','clientPhone','clientEmail','clientAddress',
+   'superficie','startDate','duration','discountValue','discountReason','notes'].forEach(id => {
+    $(id).value = '';
+  });
+  $('discountType').value = 'none';
+  $('discountValueField').style.display = 'none';
+  $('discountReasonField').style.display = 'none';
+  $('laborWarranty').value = '5 ans';
+  $('manufacturer').value = '';
+  $('manufacturerWarranty').value = '';
+  $('paymentMode').value = $('paymentMode').options[0].value;
+  $('quoteValidity').value = '30 jours';
+  saveQuoteToStorage();
+}
+
+/* ─── Modal ──────────────────────────────────────────────────── */
+let modalCallback = null;
+function showModal(title, msg, onConfirm) {
+  $('modalTitle').textContent = title;
+  $('modalMessage').textContent = msg;
+  modalCallback = onConfirm;
+  $('modalOverlay').classList.add('open');
+  $('modalConfirm').onclick = () => { closeModal(); if (modalCallback) modalCallback(); };
+}
+function closeModal() { $('modalOverlay').classList.remove('open'); }
+
+/* ─── PDF Generation ─────────────────────────────────────────── */
+function generatePDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: 'mm', format: 'letter', putOnlyUsedFonts: true });
+
+  const PAGE_W = 216;
+  const PAGE_H = 279;
+  const MARGIN = 15;
+  const CONTENT_W = PAGE_W - 2 * MARGIN;
+  let y = MARGIN;
+
+  // Collect values
+  const coName   = $('companyName').value || 'Votre Entreprise';
+  const coPhone  = $('companyPhone').value;
+  const coEmail  = $('companyEmail').value;
+  const coRBQ    = $('companyRBQ').value;
+  const clName   = $('clientName').value || '—';
+  const clPhone  = $('clientPhone').value;
+  const clEmail  = $('clientEmail').value;
+  const clAddr   = $('clientAddress').value;
+  const supf     = $('superficie').value;
+  const startD   = $('startDate').value;
+  const dur      = $('duration').value;
+  const labWar   = $('laborWarranty').value;
+  const mfr      = $('manufacturer').value;
+  const mfrWar   = $('manufacturerWarranty').value;
+  const pay      = $('paymentMode').value;
+  const valid    = $('quoteValidity').value;
+  const notesV   = $('notes').value;
+  const today    = new Date().toLocaleDateString('fr-CA');
+
+  // ── Header band
+  doc.setFillColor(26, 61, 110);
+  doc.rect(0, 0, PAGE_W, 38, 'F');
+
+  // Logo placeholder
+  doc.setDrawColor(255,255,255);
+  doc.setLineWidth(.4);
+  doc.roundedRect(MARGIN, 6, 26, 26, 2, 2, 'S');
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(7);
+  doc.setTextColor(255,255,255);
+  doc.text('LOGO', MARGIN + 13, 22, { align: 'center' });
+
+  // Company name
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(16);
+  doc.setTextColor(255, 255, 255);
+  doc.text(coName, MARGIN + 32, 16);
+
+  // Company details
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8);
+  doc.setTextColor(180, 200, 230);
+  let coLine = [coPhone, coEmail, coRBQ ? `RBQ: ${coRBQ}` : null].filter(Boolean).join('  |  ');
+  doc.text(coLine, MARGIN + 32, 23);
+
+  // Quote number
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(9);
+  doc.setTextColor(255,255,255);
+  doc.text(`N° ${state.quoteNumber}`, PAGE_W - MARGIN, 14, { align: 'right' });
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8);
+  doc.setTextColor(180,200,230);
+  doc.text(`Date : ${today}`, PAGE_W - MARGIN, 20, { align: 'right' });
+  doc.text(`Valide : ${valid}`, PAGE_W - MARGIN, 26, { align: 'right' });
+
+  y = 44;
+
+  // ── Work type band
+  doc.setFillColor(37, 99, 235);
+  doc.rect(MARGIN, y, CONTENT_W, 8, 'F');
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(9);
+  doc.setTextColor(255,255,255);
+  doc.text(`TYPE DE TRAVAUX : ${WORK_TYPES[state.workType].toUpperCase()}`, MARGIN + 4, y + 5.5);
+  if (supf) doc.text(`Superficie : ${supf} pi²`, PAGE_W - MARGIN - 4, y + 5.5, { align: 'right' });
+  y += 12;
+
+  // ── Client & project info
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(9);
+  doc.setTextColor(26, 61, 110);
+  doc.text('INFORMATIONS DU CLIENT', MARGIN, y);
+  y += 4;
+  doc.setDrawColor(200, 210, 225);
+  doc.setLineWidth(.3);
+  doc.line(MARGIN, y, PAGE_W - MARGIN, y);
+  y += 5;
+
+  const clientInfo = [
+    ['Client', clName],
+    ...(clPhone ? [['Téléphone', clPhone]] : []),
+    ...(clEmail ? [['Courriel', clEmail]] : []),
+    ...(clAddr  ? [['Adresse des travaux', clAddr]] : []),
+    ...(startD  ? [['Date de début', new Date(startD).toLocaleDateString('fr-CA')]] : []),
+    ...(dur     ? [['Durée estimée', dur]] : []),
+  ];
+  doc.setFontSize(8);
+  const half = Math.ceil(clientInfo.length / 2);
+  clientInfo.slice(0, half).forEach((pair, i) => {
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(100, 110, 130);
+    doc.text(pair[0] + ' :', MARGIN, y + i * 5.5);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(30, 30, 30);
+    doc.text(pair[1], MARGIN + 40, y + i * 5.5);
+  });
+  clientInfo.slice(half).forEach((pair, i) => {
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(100, 110, 130);
+    doc.text(pair[0] + ' :', MARGIN + CONTENT_W / 2 + 5, y + i * 5.5);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(30, 30, 30);
+    doc.text(pair[1], MARGIN + CONTENT_W / 2 + 45, y + i * 5.5, { maxWidth: 55 });
+  });
+  y += Math.ceil(clientInfo.length / 2) * 5.5 + 6;
+
+  // ── Materials table
+  y = pdfTable(doc, y, MARGIN, CONTENT_W, PAGE_H,
+    'MATÉRIAUX',
+    state.materials,
+    'Sous-total matériaux'
+  );
+
+  // ── Labor table
+  y = pdfTable(doc, y, MARGIN, CONTENT_W, PAGE_H,
+    'MAIN-D\'ŒUVRE',
+    state.labor,
+    'Sous-total main-d\'œuvre'
+  );
+
+  // ── Totals
+  y += 2;
+  const matSub = state.materials.reduce((s, r) => s + r.qty * r.price, 0);
+  const labSub = state.labor.reduce((s, r) => s + r.qty * r.price, 0);
+  const beforeTax = matSub + labSub;
+  const dtype = $('discountType').value;
+  let discAmt = 0;
+  if (dtype !== 'none') {
+    const dv = parseFloat($('discountValue').value) || 0;
+    discAmt = dtype === 'percent' ? beforeTax * (dv / 100) : dv;
+    discAmt = Math.min(discAmt, beforeTax);
+  }
+  const taxable = beforeTax - discAmt;
+  const tps = taxable * TPS_RATE;
+  const tvq = taxable * TVQ_RATE;
+  const grand = taxable + tps + tvq;
+
+  const totalsRows = [
+    ['Sous-total matériaux', matSub, false, false],
+    ['Sous-total main-d\'œuvre', labSub, false, false],
+    ['Sous-total avant taxes', beforeTax, true, false],
+    ...(discAmt > 0 ? [[`Escompte${$('discountReason').value ? ' — ' + $('discountReason').value : ''}`, -discAmt, false, false]] : []),
+    ...(discAmt > 0 ? [['Sous-total après escompte', taxable, true, false]] : []),
+    ['TPS (5 %)', tps, false, false],
+    ['TVQ (9,975 %)', tvq, false, false],
+    ['TOTAL TTC', grand, false, true],
+  ];
+
+  // Totals box
+  if (y + totalsRows.length * 7 + 8 > PAGE_H - 20) {
+    doc.addPage(); y = MARGIN;
+  }
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(9);
+  doc.setTextColor(26, 61, 110);
+  doc.text('RÉSUMÉ DES COÛTS', MARGIN, y);
+  y += 4;
+  doc.setLineWidth(.3);
+  doc.setDrawColor(200,210,225);
+  doc.line(MARGIN, y, PAGE_W - MARGIN, y);
+  y += 4;
+
+  const totalsX = PAGE_W - MARGIN - 80;
+  totalsRows.forEach(([label, val, bold, grand]) => {
+    if (grand) {
+      doc.setFillColor(26, 61, 110);
+      doc.rect(totalsX - 4, y - 4, 80 + 4, 10, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(10);
+      doc.setTextColor(255, 255, 255);
+    } else if (bold) {
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(8.5);
+      doc.setTextColor(26, 61, 110);
+    } else {
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8);
+      doc.setTextColor(val < 0 ? 180 : 60, val < 0 ? 40 : 60, val < 0 ? 40 : 60);
+    }
+    doc.text(label, totalsX, y + (grand ? 2 : 0));
+    const formatted = (val < 0 ? '-' : '') + formatCAD(Math.abs(val));
+    doc.text(formatted, PAGE_W - MARGIN, y + (grand ? 2 : 0), { align: 'right' });
+    y += grand ? 10 : 6.5;
+  });
+
+  y += 6;
+
+  // ── Warranty cards
+  if (y + 28 > PAGE_H - 20) { doc.addPage(); y = MARGIN; }
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(9);
+  doc.setTextColor(26, 61, 110);
+  doc.text('GARANTIES', MARGIN, y);
+  y += 4;
+  doc.setDrawColor(200,210,225);
+  doc.line(MARGIN, y, PAGE_W - MARGIN, y);
+  y += 5;
+
+  const cardW = (CONTENT_W - 8) / 2;
+  // Card 1 — Labour
+  doc.setFillColor(239, 246, 255);
+  doc.roundedRect(MARGIN, y, cardW, 22, 2, 2, 'F');
+  doc.setFillColor(37, 99, 235);
+  doc.roundedRect(MARGIN, y, cardW, 7, 2, 2, 'F');
+  doc.rect(MARGIN, y + 4, cardW, 3, 'F');
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(8);
+  doc.setTextColor(255,255,255);
+  doc.text('🛡  GARANTIE MAIN-D\'ŒUVRE', MARGIN + 3, y + 5);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(12);
+  doc.setTextColor(26, 61, 110);
+  doc.text(labWar, MARGIN + cardW / 2, y + 16, { align: 'center' });
+
+  // Card 2 — Fabricant
+  const c2x = MARGIN + cardW + 8;
+  doc.setFillColor(240, 253, 244);
+  doc.roundedRect(c2x, y, cardW, 22, 2, 2, 'F');
+  doc.setFillColor(22, 163, 74);
+  doc.roundedRect(c2x, y, cardW, 7, 2, 2, 'F');
+  doc.rect(c2x, y + 4, cardW, 3, 'F');
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(8);
+  doc.setTextColor(255,255,255);
+  doc.text(`🏭  GARANTIE FABRICANT${mfr ? ' — ' + mfr : ''}`, c2x + 3, y + 5);
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8);
+  doc.setTextColor(22, 163, 74);
+  doc.text(mfrWar || (mfr ? 'Voir documentation fabricant' : 'Non spécifié'), c2x + cardW / 2, y + 16, { align: 'center', maxWidth: cardW - 6 });
+  y += 28;
+
+  // Payment
+  doc.setFontSize(8);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(100, 110, 130);
+  doc.text('MODE DE PAIEMENT :', MARGIN, y);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(30, 30, 30);
+  doc.text(pay, MARGIN + 46, y);
+  y += 8;
+
+  // ── Exclusions
+  const checkedExcl = [
+    ...state.exclusions.filter(e => e.checked),
+    ...state.customExclusions.filter(e => e.checked),
+  ];
+  if (checkedExcl.length > 0) {
+    if (y + 20 > PAGE_H - 30) { doc.addPage(); y = MARGIN; }
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    doc.setTextColor(26, 61, 110);
+    doc.text('EXCLUSIONS (non inclus dans la soumission)', MARGIN, y);
+    y += 4;
+    doc.setLineWidth(.3);
+    doc.setDrawColor(200,210,225);
+    doc.line(MARGIN, y, PAGE_W - MARGIN, y);
+    y += 5;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8);
+    doc.setTextColor(60, 60, 60);
+    checkedExcl.forEach(e => {
+      if (y > PAGE_H - 30) { doc.addPage(); y = MARGIN; }
+      doc.text('•  ' + e.text, MARGIN + 2, y, { maxWidth: CONTENT_W - 4 });
+      y += 5.5;
+    });
+    y += 4;
+  }
+
+  // ── Notes
+  if (notesV) {
+    if (y + 20 > PAGE_H - 30) { doc.addPage(); y = MARGIN; }
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    doc.setTextColor(26, 61, 110);
+    doc.text('NOTES SUPPLÉMENTAIRES', MARGIN, y);
+    y += 4;
+    doc.setDrawColor(200,210,225);
+    doc.line(MARGIN, y, PAGE_W - MARGIN, y);
+    y += 5;
+    doc.setFont('helvetica', 'italic');
+    doc.setFontSize(8);
+    doc.setTextColor(80, 80, 80);
+    const splitNotes = doc.splitTextToSize(notesV, CONTENT_W - 4);
+    doc.text(splitNotes, MARGIN, y);
+    y += splitNotes.length * 5 + 6;
+  }
+
+  // ── Signatures
+  if (y + 40 > PAGE_H - 15) { doc.addPage(); y = MARGIN; }
+  y = PAGE_H - 50;
+  doc.setDrawColor(180, 190, 205);
+  doc.setLineWidth(.3);
+  doc.line(MARGIN, y, PAGE_H - 20, y);
+  doc.line(PAGE_H + 10, y, PAGE_W - MARGIN, y);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(8);
+  doc.setTextColor(100, 110, 130);
+  doc.text('Signature de l\'entrepreneur', MARGIN, y + 5);
+  doc.text('Signature du client', PAGE_H + 10, y + 5);
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(7.5);
+  doc.text(coName, MARGIN, y + 10);
+  doc.text(clName, PAGE_H + 10, y + 10);
+  doc.text('Date : ___________________', MARGIN, y + 17);
+  doc.text('Date : ___________________', PAGE_H + 10, y + 17);
+
+  // ── Footer all pages
+  const totalPages = doc.internal.getNumberOfPages();
+  for (let p = 1; p <= totalPages; p++) {
+    doc.setPage(p);
+    doc.setFillColor(245, 247, 250);
+    doc.rect(0, PAGE_H - 10, PAGE_W, 10, 'F');
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(7);
+    doc.setTextColor(140, 150, 165);
+    doc.text(`${coName}  |  Soumission N° ${state.quoteNumber}  |  ${today}`, PAGE_W / 2, PAGE_H - 4, { align: 'center' });
+    doc.text(`Page ${p} / ${totalPages}`, PAGE_W - MARGIN, PAGE_H - 4, { align: 'right' });
+  }
+
+  doc.save(`Soumission-${state.quoteNumber}-${clName.replace(/\s+/g,'-') || 'client'}.pdf`);
+}
+
+function pdfTable(doc, y, margin, contentW, pageH, title, rows, subtitleLabel) {
+  if (y + 30 > pageH - 20) { doc.addPage(); y = margin; }
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(9);
+  doc.setTextColor(26, 61, 110);
+  doc.text(title, margin, y);
+  y += 4;
+  doc.setDrawColor(200, 210, 225);
+  doc.setLineWidth(.3);
+  doc.line(margin, y, margin + contentW, y);
+  y += 3;
+
+  if (rows.length === 0) {
+    doc.setFont('helvetica', 'italic');
+    doc.setFontSize(8);
+    doc.setTextColor(160, 170, 180);
+    doc.text('Aucun élément.', margin + 4, y + 5);
+    return y + 12;
+  }
+
+  const subtotal = rows.reduce((s, r) => s + (r.qty||0) * (r.price||0), 0);
+
+  doc.autoTable({
+    startY: y,
+    margin: { left: margin, right: margin },
+    tableWidth: contentW,
+    head: [[
+      { content: 'Description', styles: { halign: 'left' } },
+      { content: 'Qté', styles: { halign: 'center' } },
+      { content: 'Unité', styles: { halign: 'center' } },
+      { content: 'Prix unit.', styles: { halign: 'right' } },
+      { content: 'Total', styles: { halign: 'right' } },
+    ]],
+    body: rows.filter(r => r.desc || r.qty || r.price).map(r => [
+      r.desc || '—',
+      { content: String(r.qty || 0), styles: { halign: 'center' } },
+      { content: r.unit || '', styles: { halign: 'center' } },
+      { content: formatCAD(r.price || 0), styles: { halign: 'right' } },
+      { content: formatCAD((r.qty||0) * (r.price||0)), styles: { halign: 'right' } },
+    ]),
+    foot: [[
+      { content: subtitleLabel, colSpan: 4, styles: { halign: 'right', fontStyle: 'bold', textColor: [26,61,110] } },
+      { content: formatCAD(subtotal), styles: { halign: 'right', fontStyle: 'bold', textColor: [26,61,110] } },
+    ]],
+    headStyles: {
+      fillColor: [26, 61, 110],
+      textColor: 255,
+      fontSize: 8,
+      fontStyle: 'bold',
+      cellPadding: 3,
+    },
+    bodyStyles: { fontSize: 8, cellPadding: 2.5, textColor: [40, 40, 40] },
+    alternateRowStyles: { fillColor: [247, 249, 252] },
+    footStyles: { fillColor: [235, 240, 250], cellPadding: 3, fontSize: 8.5 },
+    columnStyles: { 0: { cellWidth: 'auto' } },
+    showFoot: 'lastPage',
+  });
+
+  return doc.lastAutoTable.finalY + 8;
+}
+
+/* ─── Helpers ────────────────────────────────────────────────── */
+function formatCAD(n) {
+  return new Intl.NumberFormat('fr-CA', { style: 'currency', currency: 'CAD' }).format(n || 0);
+}
+
+function uid() {
+  return Math.random().toString(36).slice(2, 10);
+}
+</script>
 </body>
 </html>
