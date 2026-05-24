@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Soumissions Groupe Structor</title>
+  <title>Soumissions Toiture Pro</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
   <style>
@@ -235,9 +235,88 @@ select { cursor: pointer; }
   .map-container { height: 260px; }
 }
 @media print { body { display: none; } }
+
+/* ─── PIN Lock Screen ─── */
+#pinOverlay {
+  position: fixed; inset: 0; z-index: 9999;
+  background: var(--accent);
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column;
+  transition: opacity .4s ease;
+}
+#pinOverlay.hidden { opacity: 0; pointer-events: none; }
+.pin-box {
+  background: #fff;
+  border-radius: 20px;
+  padding: 2.5rem 2rem 2rem;
+  width: 320px;
+  box-shadow: 0 24px 60px rgba(0,0,0,.35);
+  display: flex; flex-direction: column; align-items: center; gap: 1.25rem;
+}
+.pin-logo { font-size: 2.5rem; margin-bottom: .25rem; }
+.pin-title { font-family: var(--font-display); font-weight: 800; font-size: 1.2rem; color: var(--accent); text-align: center; }
+.pin-sub { font-size: .82rem; color: var(--text-muted); text-align: center; margin-top: -.5rem; }
+.pin-dots { display: flex; gap: .75rem; margin: .25rem 0; }
+.pin-dot {
+  width: 14px; height: 14px; border-radius: 50%;
+  border: 2px solid var(--border-strong);
+  background: transparent;
+  transition: all .15s;
+}
+.pin-dot.filled { background: var(--accent); border-color: var(--accent); }
+.pin-dot.error { background: var(--danger); border-color: var(--danger); animation: shake .3s ease; }
+.pin-keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: .6rem; width: 100%; }
+.pin-key {
+  font-family: var(--font-display); font-size: 1.2rem; font-weight: 700;
+  padding: .85rem; border: 1.5px solid var(--border);
+  border-radius: 10px; background: var(--surface-2);
+  color: var(--text-primary); cursor: pointer;
+  transition: all .1s; user-select: none;
+}
+.pin-key:hover { background: var(--accent-light); border-color: var(--accent-2); color: var(--accent); }
+.pin-key:active { transform: scale(.94); background: var(--accent); color: #fff; border-color: var(--accent); }
+.pin-key.zero { grid-column: 2; }
+.pin-key.del { background: transparent; border-color: transparent; color: var(--danger); font-size: 1rem; }
+.pin-key.del:hover { background: var(--danger-light); border-color: var(--danger); }
+.pin-error-msg { font-size: .8rem; color: var(--danger); font-weight: 600; min-height: 1.2em; text-align: center; }
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
   </style>
 </head>
 <body>
+
+<div id="pinOverlay">
+  <div class="pin-box">
+    <div class="pin-logo">🏠</div>
+    <div class="pin-title">Soumissions Toiture Pro</div>
+    <p class="pin-sub">Entrez votre code PIN pour accéder</p>
+    <div class="pin-dots">
+      <div class="pin-dot" id="d0"></div>
+      <div class="pin-dot" id="d1"></div>
+      <div class="pin-dot" id="d2"></div>
+      <div class="pin-dot" id="d3"></div>
+    </div>
+    <div class="pin-error-msg" id="pinError"></div>
+    <div class="pin-keypad">
+      <button class="pin-key" data-k="1">1</button>
+      <button class="pin-key" data-k="2">2</button>
+      <button class="pin-key" data-k="3">3</button>
+      <button class="pin-key" data-k="4">4</button>
+      <button class="pin-key" data-k="5">5</button>
+      <button class="pin-key" data-k="6">6</button>
+      <button class="pin-key" data-k="7">7</button>
+      <button class="pin-key" data-k="8">8</button>
+      <button class="pin-key" data-k="9">9</button>
+      <button class="pin-key del" data-k="del">⌫</button>
+      <button class="pin-key zero" data-k="0">0</button>
+      <div></div>
+    </div>
+  </div>
+</div>
+
 
 <header class="app-header">
   <div class="header-inner">
@@ -246,7 +325,7 @@ select { cursor: pointer; }
         <span class="logo-icon">🏠</span>
       </div>
       <div class="brand-text">
-        <h1>Soumissions Groupe Structor</h1>
+        <h1>Soumissions Toiture Pro</h1>
         <p>Système de génération de soumissions professionnelles</p>
       </div>
     </div>
@@ -555,7 +634,7 @@ select { cursor: pointer; }
       <div class="totals-row" id="afterDiscountRow" style="display:none"><span>Sous-total après escompte</span><span id="subtotalAfterDiscount">0,00 $</span></div>
       <div class="totals-row tax"><span>TPS (5%)</span><span id="tps">0,00 $</span></div>
       <div class="totals-row tax"><span>TVQ (9,975%)</span><span id="tvq">0,00 $</span></div>
-      <div class="totals-row grand-total"><span>TOTAL</span><span id="grandTotal">0,00 $</span></div>
+      <div class="totals-row grand-total"><span>TOTAL TTC</span><span id="grandTotal">0,00 $</span></div>
     </div>
     <div class="action-buttons">
       <button class="btn btn-primary btn-large" id="btnDownloadPDF">⬇ Télécharger PDF</button>
@@ -1417,7 +1496,7 @@ function generatePDF() {
   let discAmt=0;
   if(dtype!=='none'){const dv=parseFloat($('discountValue').value)||0;discAmt=dtype==='percent'?beforeTax*dv/100:dv;discAmt=Math.min(discAmt,beforeTax);}
   const taxable=beforeTax-discAmt,tps=taxable*TPS_RATE,tvq=taxable*TVQ_RATE,grand=taxable+tps+tvq;
-  const tRows=[['Sous-total materiaux',matSub,false,false],['Sous-total main-d oeuvre',labSub,false,false],['Sous-total avant taxes',beforeTax,true,false],...(discAmt>0?[[`Escompte${$('discountReason').value?' - '+$('discountReason').value:''}`, -discAmt,false,false],['Sous-total apres escompte',taxable,true,false]]:[]),['TPS (5 %)',tps,false,false],['TVQ (9,975 %)',tvq,false,false],['TOTAL',grand,false,true]];
+  const tRows=[['Sous-total materiaux',matSub,false,false],['Sous-total main-d oeuvre',labSub,false,false],['Sous-total avant taxes',beforeTax,true,false],...(discAmt>0?[[`Escompte${$('discountReason').value?' - '+$('discountReason').value:''}`, -discAmt,false,false],['Sous-total apres escompte',taxable,true,false]]:[]),['TPS (5 %)',tps,false,false],['TVQ (9,975 %)',tvq,false,false],['TOTAL TTC',grand,false,true]];
   if(y+tRows.length*7+8>PH-20){doc.addPage();y=M;}
   doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(26,61,110);doc.text('RESUME DES COUTS',M,y);y+=4;
   doc.setLineWidth(.3);doc.setDrawColor(200,210,225);doc.line(M,y,PW-M,y);y+=4;
@@ -1509,6 +1588,77 @@ function pdfTable(doc,y,margin,contentW,pageH,title,rows,subLabel){
   });
   return doc.lastAutoTable.finalY+8;
 }
+
+
+/* ─── PIN Lock ─── */
+(function() {
+  var CORRECT = '0745';
+  var SESSION_KEY = 'rtp_pin_ok';
+  var entered = '';
+
+  function checkSession() {
+    if (sessionStorage.getItem(SESSION_KEY) === '1') {
+      document.getElementById('pinOverlay').style.display = 'none';
+    }
+  }
+
+  function updateDots() {
+    for (var i = 0; i < 4; i++) {
+      var dot = document.getElementById('d' + i);
+      dot.classList.toggle('filled', i < entered.length);
+      dot.classList.remove('error');
+    }
+    document.getElementById('pinError').textContent = '';
+  }
+
+  function showError() {
+    for (var i = 0; i < 4; i++) {
+      document.getElementById('d' + i).classList.add('error');
+    }
+    document.getElementById('pinError').textContent = 'Code incorrect. Réessayez.';
+    setTimeout(function() {
+      entered = '';
+      updateDots();
+    }, 800);
+  }
+
+  function handleKey(k) {
+    if (k === 'del') {
+      entered = entered.slice(0, -1);
+      updateDots();
+      return;
+    }
+    if (entered.length >= 4) return;
+    entered += k;
+    updateDots();
+    if (entered.length === 4) {
+      if (entered === CORRECT) {
+        sessionStorage.setItem(SESSION_KEY, '1');
+        var overlay = document.getElementById('pinOverlay');
+        overlay.classList.add('hidden');
+        setTimeout(function() { overlay.style.display = 'none'; }, 400);
+      } else {
+        showError();
+      }
+    }
+  }
+
+  // Keyboard support
+  document.addEventListener('keydown', function(e) {
+    if (document.getElementById('pinOverlay').style.display === 'none') return;
+    if (e.key >= '0' && e.key <= '9') handleKey(e.key);
+    if (e.key === 'Backspace') handleKey('del');
+  });
+
+  // Button clicks
+  document.querySelectorAll('.pin-key').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      handleKey(this.dataset.k);
+    });
+  });
+
+  checkSession();
+})();
 
 /* ─── Helpers ─── */
 function pdfSafe(str) {
