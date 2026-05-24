@@ -849,10 +849,10 @@ function updatePitchBadge() {
    GOOGLE MAPS
 ═══════════════════════════════════════════════════════ */
 function initGoogleMaps() {
-  // API key is injected at build time via Vercel env var __GOOGLE_MAPS_API_KEY__
-  const apiKey = '__GOOGLE_MAPS_API_KEY__';
+  // ⬇ COLLEZ VOTRE CLÉ GOOGLE MAPS ICI (entre les guillemets)
+  const apiKey = 'AIzaSyCtl_w2oNOviv7UuBZR3oftmeSmRGbGO8c';
 
-  if (!apiKey || apiKey === '__GOOGLE_MAPS_API_KEY__' || apiKey.trim() === '') {
+  if (!apiKey || apiKey === 'AIzaSyCtl_w2oNOviv7UuBZR3oftmeSmRGbGO8c' || apiKey.trim() === '') {
     $('mapNoKey').style.display = '';
     $('mapReady').style.display = 'none';
     return;
