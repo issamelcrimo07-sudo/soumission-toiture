@@ -849,7 +849,6 @@ function updatePitchBadge() {
    GOOGLE MAPS
 ═══════════════════════════════════════════════════════ */
 function initGoogleMaps() {
-  // ⬇ COLLEZ VOTRE CLÉ GOOGLE MAPS ICI (entre les guillemets)
   const apiKey = 'AIzaSyCtl_w2oNOviv7UuBZR3oftmeSmRGbGO8c';
 
   if (!apiKey || apiKey === 'VOTRE_CLE_ICI' || apiKey.trim() === '') {
@@ -861,13 +860,19 @@ function initGoogleMaps() {
   $('mapNoKey').style.display = 'none';
   $('mapReady').style.display = '';
 
-  // Dynamically load Maps JS API
-  window._mapsReadyCallback = function() { setupMap(); };
+  // Use unique callback name to avoid conflicts
+  const cbName = '_gmapsCb_' + Date.now();
+  window[cbName] = function() {
+    delete window[cbName];
+    try { setupMap(); } catch(e) { console.error('Maps setup error:', e); }
+  };
+
   const script = document.createElement('script');
-  script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=drawing,places,geometry&callback=_mapsReadyCallback`;
+  script.src = 'https://maps.googleapis.com/maps/api/js?key=' + apiKey + '&libraries=drawing,places,geometry&loading=async&callback=' + cbName;
   script.async = true;
-  script.onerror = () => {
-    $('mapReady').innerHTML = `<div class="map-no-key"><div class="map-no-key-box"><h3>❌ Erreur de chargement de la carte</h3><p>Vérifiez que votre clé API est valide et que les APIs <strong>Maps JavaScript</strong>, <strong>Places</strong> et <strong>Geometry</strong> sont activées dans Google Cloud Console.</p></div></div>`;
+  script.defer = true;
+  script.onerror = function() {
+    $('mapReady').innerHTML = '<div style="padding:1.25rem"><div style="background:#fef3c7;border:1.5px solid #fde68a;border-radius:10px;padding:1rem 1.25rem"><strong style="color:#92400e">Erreur de chargement Google Maps</strong><p style="color:#78350f;font-size:.85rem;margin-top:.5rem">Verifiez que la facturation est activee dans Google Cloud Console et que les APIs Maps JavaScript et Places sont activees.</p></div></div>';
   };
   document.head.appendChild(script);
 }
@@ -915,18 +920,23 @@ function setupMap() {
   });
 
   // Address autocomplete
-  const addressInput = $('clientAddress');
-  const autocomplete = new google.maps.places.Autocomplete(addressInput, {
-    types: ['address'],
-    componentRestrictions: { country: 'ca' },
-  });
-  autocomplete.addListener('place_changed', () => {
-    const place = autocomplete.getPlace();
-    if (place.geometry) {
-      mapInstance.setCenter(place.geometry.location);
-      mapInstance.setZoom(20);
-    }
-  });
+  try {
+    const addressInput = $('clientAddress');
+    const autocomplete = new google.maps.places.Autocomplete(addressInput, {
+      types: ['address'],
+      componentRestrictions: { country: 'ca' },
+      fields: ['geometry', 'formatted_address'],
+    });
+    autocomplete.addListener('place_changed', () => {
+      const place = autocomplete.getPlace();
+      if (place && place.geometry && place.geometry.location) {
+        mapInstance.setCenter(place.geometry.location);
+        mapInstance.setZoom(20);
+      }
+    });
+  } catch(e) {
+    console.warn('Autocomplete init error:', e);
+  }
 }
 
 function computePolygonArea(polygon) {
