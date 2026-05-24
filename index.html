@@ -860,19 +860,12 @@ function initGoogleMaps() {
   $('mapNoKey').style.display = 'none';
   $('mapReady').style.display = '';
 
-  // Use unique callback name to avoid conflicts
-  const cbName = '_gmapsCb_' + Date.now();
-  window[cbName] = function() {
-    delete window[cbName];
-    try { setupMap(); } catch(e) { console.error('Maps setup error:', e); }
-  };
-
+  window._mapsReadyCallback = function() { setupMap(); };
   const script = document.createElement('script');
-  script.src = 'https://maps.googleapis.com/maps/api/js?key=' + apiKey + '&libraries=drawing,places,geometry&loading=async&callback=' + cbName;
+  script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=drawing,places,geometry&callback=_mapsReadyCallback`;
   script.async = true;
-  script.defer = true;
-  script.onerror = function() {
-    $('mapReady').innerHTML = '<div style="padding:1.25rem"><div style="background:#fef3c7;border:1.5px solid #fde68a;border-radius:10px;padding:1rem 1.25rem"><strong style="color:#92400e">Erreur de chargement Google Maps</strong><p style="color:#78350f;font-size:.85rem;margin-top:.5rem">Verifiez que la facturation est activee dans Google Cloud Console et que les APIs Maps JavaScript et Places sont activees.</p></div></div>';
+  script.onerror = () => {
+    $('mapReady').innerHTML = '<div class="map-no-key"><div class="map-no-key-box"><h3>Erreur de chargement de la carte</h3><p>Verifiez que la facturation est activee dans Google Cloud Console et que les APIs Maps JavaScript et Places sont activees.</p></div></div>';
   };
   document.head.appendChild(script);
 }
@@ -920,23 +913,18 @@ function setupMap() {
   });
 
   // Address autocomplete
-  try {
-    const addressInput = $('clientAddress');
-    const autocomplete = new google.maps.places.Autocomplete(addressInput, {
-      types: ['address'],
-      componentRestrictions: { country: 'ca' },
-      fields: ['geometry', 'formatted_address'],
-    });
-    autocomplete.addListener('place_changed', () => {
-      const place = autocomplete.getPlace();
-      if (place && place.geometry && place.geometry.location) {
-        mapInstance.setCenter(place.geometry.location);
-        mapInstance.setZoom(20);
-      }
-    });
-  } catch(e) {
-    console.warn('Autocomplete init error:', e);
-  }
+  const addressInput = $('clientAddress');
+  const autocomplete = new google.maps.places.Autocomplete(addressInput, {
+    types: ['address'],
+    componentRestrictions: { country: 'ca' },
+  });
+  autocomplete.addListener('place_changed', () => {
+    const place = autocomplete.getPlace();
+    if (place.geometry) {
+      mapInstance.setCenter(place.geometry.location);
+      mapInstance.setZoom(20);
+    }
+  });
 }
 
 function computePolygonArea(polygon) {
@@ -1524,18 +1512,28 @@ function pdfTable(doc,y,margin,contentW,pageH,title,rows,subLabel){
 
 /* ─── Helpers ─── */
 function pdfSafe(str) {
-  return String(str || '')
-    .replace(/é/g, 'e').replace(/è/g, 'e').replace(/ê/g, 'e').replace(/ë/g, 'e')
-    .replace(/à/g, 'a').replace(/â/g, 'a').replace(/ä/g, 'a')
-    .replace(/ô/g, 'o').replace(/ö/g, 'o').replace(/ù/g, 'u')
-    .replace(/û/g, 'u').replace(/ü/g, 'u').replace(/î/g, 'i')
-    .replace(/ï/g, 'i').replace(/ç/g, 'c').replace(/ñ/g, 'n')
-    .replace(/É/g, 'E').replace(/È/g, 'E').replace(/Ê/g, 'E')
-    .replace(/À/g, 'A').replace(/Â/g, 'A').replace(/Ô/g, 'O')
-    .replace(/Ù/g, 'U').replace(/Û/g, 'U').replace(/Î/g, 'I')
-    .replace(/Ç/g, 'C').replace(/Œ/g, 'OE').replace(/œ/g, 'oe')
-    .replace(/²/g, '2').replace(/→/g, '->').replace(/—/g, '-')
-    .replace(/–/g, '-').replace(/«/g, '"').replace(/»/g, '"')
-    .replace(/‘/g, "'").replace(/’/g, "'").replace(/“/g, '"')
-    .replace(/”/g, '"').replace(/•/g, '*').replace(/…/g, '...')
-    .replace(/ /g, ' ').replace(/[^
+  if (!str) return '';
+  var map = {
+    '\u00e9':'e','\u00e8':'e','\u00ea':'e','\u00eb':'e',
+    '\u00e0':'a','\u00e2':'a','\u00e4':'a',
+    '\u00f4':'o','\u00f6':'o','\u00f9':'u','\u00fb':'u','\u00fc':'u',
+    '\u00ee':'i','\u00ef':'i','\u00e7':'c','\u00f1':'n',
+    '\u00c9':'E','\u00c8':'E','\u00ca':'E','\u00c0':'A','\u00c2':'A',
+    '\u00d4':'O','\u00d9':'U','\u00db':'U','\u00ce':'I','\u00c7':'C',
+    '\u0152':'OE','\u0153':'oe','\u00b2':'2','\u00b0':'deg',
+    '\u2192':'->','\u2014':'-','\u2013':'-','\u00ab':'"','\u00bb':'"',
+    '\u2018':"'",'\u2019':"'",'\u201c':'"','\u201d':'"',
+    '\u00a0':' ','\u2026':'...','\u2022':'*'
+  };
+  return String(str).split('').map(function(c) {
+    if (map[c]) return map[c];
+    if (c.charCodeAt(0) > 127) return '';
+    return c;
+  }).join('');
+}
+function formatCAD(n){return new Intl.NumberFormat('fr-CA',{style:'currency',currency:'CAD'}).format(n||0);}
+function uid(){return Math.random().toString(36).slice(2,10);}
+</script>
+</body>
+</html>
+HTMLEOF
